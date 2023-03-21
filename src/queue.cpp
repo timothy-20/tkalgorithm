@@ -5,15 +5,44 @@
 #include <queue.h>
 
 namespace tk {
+    // array_based_queue implementation
     template<typename t>
-    queue<t>::~queue() {
-        while (this->_count != 0) {
-            this->dequeue();
+    void array_based_queue<t>::enqueue(t value) {
+        if (this->is_full()) {
+            return;
         }
+
+        this->_back_index = (this->_back_index + 1) % this->_capacity;
+        this->_values[this->_back_index] = value;
+        this->_count++;
+    }
+    template <typename t>
+    t array_based_queue<t>::dequeue() {
+        if (this->is_full()) {
+            return t();
+        }
+
+        t temp_value(this->_values[this->_front_index]);
+        this->_front_index = (this->_front_index + 1) % this->_capacity;
+        this->_count--;
+
+        return temp_value;
     }
 
+    // linked_list_based_queue implementation
     template<typename t>
-    void queue<t>::enqueue(t value) {
+    linked_list_based_queue<t>::~linked_list_based_queue() {
+        auto temp_node(this->_front);
+
+        while (temp_node != nullptr) {
+            auto next_node(temp_node->_next);
+            delete temp_node;
+
+            temp_node = next_node;
+        }
+    }
+    template<typename t>
+    void linked_list_based_queue<t>::enqueue(t value) {
         auto new_node(new node<t>(value));
 
         if (this->_front == nullptr) {
@@ -30,9 +59,12 @@ namespace tk {
 
         this->_count++;
     }
-
     template <typename t>
-    t queue<t>::dequeue() {
+    void linked_list_based_queue<t>::enqueue_emplace(t &value) {
+
+    }
+    template <typename t>
+    t linked_list_based_queue<t>::dequeue() {
         if (this->_front == nullptr) {
             return t();
         }
@@ -53,6 +85,6 @@ namespace tk {
         return value;
     }
 
-    template class queue<int32_t>;
-    template class queue<uint32_t>;
+    template class array_based_queue<int>;
+    template class linked_list_based_queue<int>;
 };

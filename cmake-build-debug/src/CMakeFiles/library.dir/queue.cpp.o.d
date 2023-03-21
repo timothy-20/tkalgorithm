@@ -1,7 +1,7 @@
-src/CMakeFiles/library.dir/queue.cpp.o: \
- /mnt/d/Windows\ MFC\ Projects/tkalgorithm/src/queue.cpp \
+src/CMakeFiles/library.dir/linked_list_based_queue.cpp.o: \
+ /mnt/d/Windows\ MFC\ Projects/tkalgorithm/src/linked_list_based_queue.cpp \
  /usr/include/stdc-predef.h \
- /mnt/d/Windows\ MFC\ Projects/tkalgorithm/include/queue.h \
+ /mnt/d/Windows\ MFC\ Projects/tkalgorithm/include/linked_list_based_queue.h \
  /usr/include/c++/11/iostream \
  /usr/include/x86_64-linux-gnu/c++/11/bits/c++config.h \
  /usr/include/x86_64-linux-gnu/c++/11/bits/os_defines.h \

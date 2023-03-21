@@ -300,4 +300,4 @@ test/CMakeFiles/tests.dir/queue_test.cpp.o: \
  /mnt/d/Windows\ MFC\ Projects/tkalgorithm/cmake-build-debug/_deps/googletest-src/googletest/include/gtest/gtest-typed-test.h \
  /mnt/d/Windows\ MFC\ Projects/tkalgorithm/cmake-build-debug/_deps/googletest-src/googletest/include/gtest/gtest_pred_impl.h \
  /mnt/d/Windows\ MFC\ Projects/tkalgorithm/cmake-build-debug/_deps/googletest-src/googletest/include/gtest/gtest_prod.h \
- /mnt/d/Windows\ MFC\ Projects/tkalgorithm/include/queue.h
+ /mnt/d/Windows\ MFC\ Projects/tkalgorithm/include/linked_list_based_queue.h
