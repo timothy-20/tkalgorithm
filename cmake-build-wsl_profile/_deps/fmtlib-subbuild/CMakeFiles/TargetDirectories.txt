@@ -1,3 +1,0 @@
-/mnt/d/Windows MFC Projects/tkalgorithm/cmake-build-wsl_profile/_deps/fmtlib-subbuild/CMakeFiles/fmtlib-populate.dir
-/mnt/d/Windows MFC Projects/tkalgorithm/cmake-build-wsl_profile/_deps/fmtlib-subbuild/CMakeFiles/edit_cache.dir
-/mnt/d/Windows MFC Projects/tkalgorithm/cmake-build-wsl_profile/_deps/fmtlib-subbuild/CMakeFiles/rebuild_cache.dir
