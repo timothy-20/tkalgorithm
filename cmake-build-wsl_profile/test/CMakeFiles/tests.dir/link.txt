@@ -1,0 +1,1 @@
+/usr/bin/c++ -g CMakeFiles/tests.dir/queue_test.cpp.o -o tests  -Wl,-rpath,"/mnt/d/Windows MFC Projects/tkalgorithm/cmake-build-wsl_profile/src" ../src/liblibrary.so ../lib/libgtest_main.a ../lib/libgtest.a 

@@ -1,0 +1,2 @@
+/usr/bin/ar qc libtkmodules.a CMakeFiles/tkmodules.dir/queue.cpp.o
+/usr/bin/ranlib libtkmodules.a

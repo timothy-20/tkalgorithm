@@ -1,0 +1,1 @@
+/usr/bin/c++ -g CMakeFiles/app.dir/app.cpp.o -o app  -Wl,-rpath,"/mnt/d/Windows MFC Projects/tkalgorithm/cmake-build-debug/src" ../src/liblibrary.so ../_deps/fmtlib-build/libfmtd.a 
