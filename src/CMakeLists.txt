@@ -1,10 +1,12 @@
-set(
-        INCLUDE
-        "${CMAKE_SOURCE_DIR}/include/queue.h"
+file(
+        GLOB_RECURSE INCLUDE
+        RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
+        ${CMAKE_SOURCE_DIR}/include/*.h
 )
 set(
         SOURCE
         queue.cpp
+        circular_queue.cpp
 )
 
 add_library(library SHARED ${SOURCE})

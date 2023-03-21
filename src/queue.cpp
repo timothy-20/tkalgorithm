@@ -37,7 +37,6 @@ namespace tk {
         while (temp_node != nullptr) {
             auto next_node(temp_node->_next);
             delete temp_node;
-
             temp_node = next_node;
         }
     }
@@ -79,7 +78,6 @@ namespace tk {
         this->_count--;
         temp_node->_next = nullptr;
         t value(temp_node->_value);
-
         delete temp_node;
 
         return value;
