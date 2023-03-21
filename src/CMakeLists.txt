@@ -7,7 +7,7 @@ set(
         SOURCE
         queue.cpp
         circular_queue.cpp
-)
+        ../include/array.h)
 
 add_library(library SHARED ${SOURCE})
 target_include_directories(library PUBLIC ${PROJECT_SOURCE_DIR}/include)
