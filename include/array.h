@@ -8,39 +8,49 @@ namespace tk {
     template <typename t>
     class dynamic_array {
     private:
-        t* _values;
+        t* _list;
         uint32_t _capacity;
         uint32_t _count;
-        uint32_t _realloc_count;
 
     private:
-//        void adjust_capacity() {
-//        }
+        void expand_capacity() {
+            // ...
+        }
 
     public:
         explicit dynamic_array(uint32_t capacity) :
-        _values(new t[capacity]),
+        _list(new t[capacity]),
         _capacity(capacity),
-        _count(0),
-        _realloc_count(0) {
+        _count(0) {
         }
         ~dynamic_array() {
-            delete[] this->_values;
+            delete[] this->_list;
         }
         void add(t value) {
-            if (this->_count > this->_capacity) {
+            if (this->_count == this->_capacity) {
                 this->_capacity *= 2;
                 auto new_list(new t[this->_capacity]);
 
-                for (int i(0); i < sizeof(this->_values); i++) {
-                    new_list[i] = this->_values[i];
+                for (int i(0); i < sizeof(this->_list); i++) {
+                    new_list[i] = this->_list[i];
                 }
+
+                this->_list = new_list;
             }
 
-            this->_values[this->_count] = value;
+            this->_list[this->_count] = value;
             this->_count++;
         }
         void insert(t value, uint32_t index) {
+            uint32_t start_index(index + 1);
+            uint32_t end_index(sizeof(this->_list) - 1);
+            size_t bound(end_index - start_index);
+            t rest_list[bound];
+
+            for (uint32_t i(start_index); i < end_index; i++) {
+                rest_list = this->_list[i];
+            }
+
 
         }
         void remove(t value, uint32_t index) {
