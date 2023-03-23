@@ -11,6 +11,7 @@ if (CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
     set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
     include(CTest)
+    enable_testing()
 
     find_package(Doxygen)
 
