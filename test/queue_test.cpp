@@ -5,7 +5,7 @@
 #include <gtest/gtest.h>
 #include <queue.h>
 
-TEST(TestSuite001, ArrayBaseQueueTest001) {
+TEST(test_suite_001, array_based_queue_enqueue_test_001) {
     tk::array_based_queue<int> new_queue(20);
     const int loop_count(3);
 
@@ -18,7 +18,7 @@ TEST(TestSuite001, ArrayBaseQueueTest001) {
     }
 }
 
-TEST(TestSuite001, ArrayBaseQueueTest002) {
+TEST(test_suite_001, array_based_queue_enqueue_test_002) {
     tk::array_based_queue<int> new_queue(3);
 
     for (int i(1); i <= 3; i++) {
@@ -30,7 +30,7 @@ TEST(TestSuite001, ArrayBaseQueueTest002) {
     EXPECT_EQ(new_queue.back(), 3);
 }
 
-TEST(TestSuite002, LinkedListBaseQueueTest001) {
+TEST(test_suite_002, linked_list_based_queue_enqueue_test_001) {
     tk::linked_list_based_queue<int> new_queue;
     const int loop_count(3);
 
@@ -43,7 +43,7 @@ TEST(TestSuite002, LinkedListBaseQueueTest001) {
     }
 }
 
-TEST(TestSuite002, LinkedListBaseQueueTest002) {
+TEST(test_suite_002, linked_list_based_queue_enqueue_test_002) {
     auto new_queue(new tk::linked_list_based_queue<int>());
 
     for (int i(1); i <= 5; i++) {

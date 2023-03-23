@@ -5,6 +5,7 @@ file(
 )
 set(
         SOURCE
+        array.cpp
         queue.cpp
         circular_queue.cpp
         ../include/array.h)
