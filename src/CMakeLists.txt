@@ -7,7 +7,6 @@ set(
         SOURCE
         array.cpp
         queue.cpp
-        circular_queue.cpp
         ../include/array.h)
 
 add_library(library SHARED ${SOURCE})

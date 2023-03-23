@@ -2,6 +2,7 @@
 // Created by jungu on 3/21/2023.
 //
 
+#pragma once
 #include <iostream>
 
 namespace tk {

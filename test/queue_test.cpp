@@ -7,13 +7,12 @@
 
 TEST(test_suite_queue, array_based_queue_enqueue_test_001) {
     tk::array_based_queue<int> new_queue(20);
-    const int loop_count(3);
 
-    for (int i(1); i <= loop_count; i++) {
+    for (int i(1); i <= 3; i++) {
         new_queue.enqueue(i);
     }
 
-    for (int j(1); j <= loop_count; j++) {
+    for (int j(1); j <= 3; j++) {
         EXPECT_EQ(new_queue.dequeue(), j);
     }
 }

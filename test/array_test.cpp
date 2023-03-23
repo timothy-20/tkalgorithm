@@ -5,11 +5,14 @@
 #include <gtest/gtest.h>
 #include <array.h>
 
-TEST(test_suite_array, dynamic_array_add_test) {
-    constexpr size_t size(5);
-    tk::dynamic_array<int> arr(size);
+TEST(test_suite_array, dynamic_array_initialize_test) {
 
-    for (int i(0); i < size; i++) {
+}
+
+TEST(test_suite_array, dynamic_array_add_test) {
+    tk::dynamic_array<int> arr(5);
+
+    for (int i(0); i < 5; i++) {
         arr.add(i);
     }
 

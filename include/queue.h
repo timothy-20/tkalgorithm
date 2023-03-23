@@ -74,7 +74,6 @@ namespace tk {
         _back(nullptr) {}
         virtual ~linked_list_based_queue();
         void enqueue(t value);
-        void enqueue_emplace(t& value);
         t dequeue();
         t front() const { return this->_front ? this->_front->_value : t(); }
         t back() const { return this->_back ? this->_back->_value : t(); }

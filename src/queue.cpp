@@ -59,10 +59,6 @@ namespace tk {
         this->_count++;
     }
     template <typename t>
-    void linked_list_based_queue<t>::enqueue_emplace(t &value) {
-
-    }
-    template <typename t>
     t linked_list_based_queue<t>::dequeue() {
         if (this->_front == nullptr) {
             return t();
