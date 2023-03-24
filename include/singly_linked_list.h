@@ -88,23 +88,31 @@ namespace tk {
         }
         void remove_front() {
             if (this->_front) {
-                this->_front = this->_front->_next;
+                this->_front = std::move(this->_front->_next);
                 this->_count--;
             }
         }
-        void insert_after(uint32_t index) {
+        void insert_after(uint32_t index, const t& value) {
+            if (index > this->_count - 2) {
+                throw std::out_of_range("Unable to insert, out of range of array.");
+            }
 
+            node* temp_node(this->_front.get());
+
+            for (int i(0); i < index + 1; i++) {
+                temp_node = temp_node->_next.get();
+            }
+
+            node* after_node(temp_node->_next.get());
+            auto new_node(std::make_unique<node>(value));
+            new_node->_next = std::move(after_node);
+            temp_node->_next = std::move(new_node);
+            this->_count++;
         }
         void remove_after(uint32_t index) {
 
         }
-        t front() const {
-            if (this->_front == nullptr) {
-                throw std::runtime_error("Unable to access, front node pointer is nullptr.");
-            }
-
-            return this->_front->_value;
-        }
+        t front() const { return this->_front ? this->_front->_value : t(); }
         size_t count() const { return this->_count; }
         iterator begin() const { return iterator(this->_front.get()); }
         iterator end() const { return iterator(nullptr); }
