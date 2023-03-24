@@ -9,35 +9,70 @@
 namespace tk {
     template<typename t>
     class singly_linked_list {
+    private:
+        struct node {
+            t _value;
+            std::unique_ptr<node> _next;
+
+            explicit node(const t& value) :
+            _value(value),
+            _next(nullptr) {}
+            node() : node(t()) {}
+        };
+
+    private:
+        std::unique_ptr<node> _front;
+        size_t _count;
+
     public:
-        template <typename it>
         class iterator {
+        private:
+            node* _cursor;
+
         public:
-            using value_type = t;
-            using pointer_type = t*;
-            using reference_type = t&;
             using difference_type = std::ptrdiff_t;
             using iterator_category = std::forward_iterator_tag;
 
-            explicit iterator(pointer_type value) : _pointer_value(value) {}
-            reference_type operator*() { return *this->_pointer_value; }
-            pointer_type operator->() { return this->_pointer_value; }
-            iterator<it>& operator++() {
-                ++this->_pointer_value;
+            explicit iterator(node* cursor) : _cursor(cursor) {}
+            t& operator*() {
+                if (this->_cursor == nullptr) {
+                    throw std::runtime_error("Unable to access, this pointer is nullptr.");
+                }
+
+                return this->_cursor->_value;
+            }
+            iterator operator+(size_t index) {
+                size_t count(0);
+                node* temp_node(this->_cursor);
+
+                while (temp_node) {
+                    if (count == index)
+                        break;
+
+                    temp_node = temp_node->_next.get();
+                    count++;
+                }
+
+                return iterator(temp_node);
+            }
+            iterator& operator++() {
+                if (this->_cursor) {
+                    this->_cursor = this->_cursor->_next.get();
+                }
 
                 return *this;
             }
-            iterator<it> operator++(it) {
-                iterator<it> temp(*this);
-                this->_pointer_value++;
+            iterator operator++(t) {
+                iterator temp(*this);
+
+                if (this->_cursor) {
+                    this->_cursor = this->_cursor->_next.get();
+                }
 
                 return temp;
             }
-            bool operator==(const iterator<it>& other) { return this->_pointer_value == other._pointer_value; }
-            bool operator!=(const iterator<it>& other) { return this->_pointer_value != other._pointer_value; }
-
-        private:
-            pointer_type _pointer_value;
+            bool operator==(const iterator& other) const { return this->_cursor == other._cursor; }
+            bool operator!=(const iterator& other) const { return this->_cursor != other._cursor; }
         };
 
     public:
@@ -46,7 +81,7 @@ namespace tk {
         _count(0) {}
         ~singly_linked_list() = default;
         void add_front(const t& value) {
-            auto new_node(std::make_unique<node<t>>(value));
+            auto new_node(std::make_unique<node>(value));
             new_node->_next = std::move(this->_front);
             this->_front = std::move(new_node);
             this->_count++;
@@ -63,23 +98,15 @@ namespace tk {
         void remove_after(uint32_t index) {
 
         }
-        t front() const { return this->_front->_value; }
+        t front() const {
+            if (this->_front == nullptr) {
+                throw std::runtime_error("Unable to access, front node pointer is nullptr.");
+            }
+
+            return this->_front->_value;
+        }
         size_t count() const { return this->_count; }
-
-    private:
-        template <typename nt>
-        struct node {
-            nt _value;
-            std::unique_ptr<node<nt>> _next;
-
-            explicit node(const nt& value) :
-                    _value(value),
-                    _next(nullptr) {}
-            node() : node(nt()) {}
-        };
-
-    private:
-        std::unique_ptr<node<t>> _front;
-        size_t _count;
+        iterator begin() const { return iterator(this->_front.get()); }
+        iterator end() const { return iterator(nullptr); }
     };
 }
