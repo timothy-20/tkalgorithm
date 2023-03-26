@@ -7,7 +7,8 @@ set(
         SOURCE
         array.cpp
         queue.cpp
-        ../include/array.h)
+        singly_linked_list.cpp
+)
 
 add_library(library SHARED ${SOURCE})
 target_include_directories(library PUBLIC ${PROJECT_SOURCE_DIR}/include)
