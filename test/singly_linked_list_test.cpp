@@ -48,8 +48,10 @@ TEST(test_suite_singly_linked_list, insert_after_test) {
     list.insert_after(0, 3); // insert 3 at 1
     EXPECT_EQ(list.count(), 3);
 
+    auto iterator(list.begin());
+
     for (int i(4); i > 1; i--) {
-        EXPECT_EQ(*(list.begin()++), i);
+        EXPECT_EQ(*(iterator++), i);
     }
 }
 

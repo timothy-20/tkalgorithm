@@ -97,19 +97,39 @@ namespace tk {
                 throw std::out_of_range("Unable to insert, out of range of array.");
             }
 
-            node* temp_node(this->_front.get());
+            node* current_node(this->_front.get());
 
-            for (int i(0); i < index + 1; i++) {
-                temp_node = temp_node->_next.get();
+            for (int i(0); i < index; i++) {
+                current_node = current_node->_next.get();
             }
 
-            node* after_node(temp_node->_next.get());
             auto new_node(std::make_unique<node>(value));
-            new_node->_next = std::move(after_node);
-            temp_node->_next = std::move(new_node);
+            new_node->_next = std::move(current_node->_next);
+            current_node->_next = std::move(new_node);
             this->_count++;
         }
+        void insert_after(iterator iterator, const t& value) {
+            if ((iterator + 1) == nullptr) {
+                throw std::out_of_range("Unable to insert, after node is nullptr.");
+            }
+
+        }
         void remove_after(uint32_t index) {
+            if (index > this->_count - 2) {
+                throw std::out_of_range("Unable to remove, out of range of array.");
+            }
+
+            node* current_node(this->_front.get());
+
+            for (int i(0); i < index; i++) {
+                current_node = current_node->_next.get();
+            }
+
+            auto next_node(std::move(current_node->_next->_next));
+            current_node->_next = std::move(next_node);
+            this->_count--;
+        }
+        void remove_after(iterator iterator) {
 
         }
         t front() const { return this->_front ? this->_front->_value : t(); }
