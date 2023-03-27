@@ -40,6 +40,23 @@ TEST(test_suite_singly_linked_list, remove_front_test) {
     EXPECT_EQ(list.count(), 0);
 }
 
+TEST(test_suite_singly_linked_list, assign_test_001) {
+    tk::singly_linked_list<int> list;
+
+    for (int i(0); i < 5; i++) {
+        list.add_front(0);
+    }
+
+    list.assign(list.begin(), 10);
+    list.assign(list.begin() + 1, 2);
+    list.assign(list.begin() + 2, 3);
+
+    EXPECT_EQ(list.front(), 10);
+    EXPECT_EQ(*(list.begin() + 1), 2);
+    EXPECT_EQ(*(list.begin() + 2), 3);
+    EXPECT_EQ(*(list.begin() + 3), 0);
+}
+
 TEST(test_suite_singly_linked_list, insert_after_test_001) {
     tk::singly_linked_list<int> list;
 
