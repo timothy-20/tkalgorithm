@@ -48,14 +48,12 @@ namespace tk {
         _front(nullptr),
         _count(0) {}
         ~singly_linked_list() = default;
-        void add_front(const t& value);
-        void remove_front();
+        void push_front(const t& value);
+        void pop_front();
         void assign(iterator iterator, const t& value);
         void assign(size_t index, const t& value);
         void insert_after(iterator iterator, const t& value);
-        void insert_after(size_t index, const t& value);
         void remove_after(iterator iterator);
-        void remove_after(size_t index);
         t front() const { return this->_front ? this->_front->_value : t(); }
         size_t count() const { return this->_count; }
         iterator begin() const { return iterator(this->_front.get()); }

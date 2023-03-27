@@ -51,7 +51,7 @@ namespace tk {
     }
 
     template <typename t>
-    void singly_linked_list<t>::add_front(const t &value) {
+    void singly_linked_list<t>::push_front(const t &value) {
         auto new_node(std::make_unique<node>(value));
         new_node->_next = std::move(this->_front);
         this->_front = std::move(new_node);
@@ -59,7 +59,7 @@ namespace tk {
     }
 
     template <typename t>
-    void singly_linked_list<t>::remove_front() {
+    void singly_linked_list<t>::pop_front() {
         if (this->_front) {
             this->_front = std::move(this->_front->_next);
             this->_count--;
@@ -94,11 +94,6 @@ namespace tk {
     }
 
     template <typename t>
-    void singly_linked_list<t>::insert_after(size_t index, const t &value) {
-        this->insert_after(this->begin() + index, value);
-    }
-
-    template <typename t>
     void singly_linked_list<t>::remove_after(singly_linked_list::iterator iterator) {
         if (iterator == this->end()) {
             throw std::out_of_range("Unable to remove, target node is nullptr.");
@@ -110,11 +105,6 @@ namespace tk {
             iterator->_next = std::move(next_node->_next);
             this->_count--;
         }
-    }
-
-    template <typename t>
-    void singly_linked_list<t>::remove_after(size_t index) {
-        this->remove_after(this->begin() + index);
     }
 
     template class singly_linked_list<int>;

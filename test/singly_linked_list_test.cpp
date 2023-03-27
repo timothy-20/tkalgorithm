@@ -12,29 +12,29 @@ TEST(test_suite_singly_linked_list, initialize_test) {
     EXPECT_EQ(list.front(), 0);
 }
 
-TEST(test_suite_singly_linked_list, add_front_test) {
+TEST(test_suite_singly_linked_list, push_front_test) {
     tk::singly_linked_list<int> list;
 
     for (int i(0); i < 3; i++) {
-        list.add_front(i);
+        list.push_front(i);
     }
 
     EXPECT_EQ(list.count(), 3);
     EXPECT_EQ(list.front(), 2);
 }
 
-TEST(test_suite_singly_linked_list, remove_front_test) {
+TEST(test_suite_singly_linked_list, pop_front_test) {
     tk::singly_linked_list<int> list;
 
     for (int i(0); i < 3; i++) {
-        list.add_front(i);
+        list.push_front(i);
     }
 
     EXPECT_EQ(list.count(), 3);
 
     for (int i(2); i >= 0; i--) {
         EXPECT_EQ(list.front(), i);
-        list.remove_front();
+        list.pop_front();
     }
 
     EXPECT_EQ(list.count(), 0);
@@ -44,7 +44,7 @@ TEST(test_suite_singly_linked_list, assign_test_001) {
     tk::singly_linked_list<int> list;
 
     for (int i(0); i < 5; i++) {
-        list.add_front(0);
+        list.push_front(0);
     }
 
     list.assign(list.begin(), 10);
@@ -57,10 +57,10 @@ TEST(test_suite_singly_linked_list, assign_test_001) {
     EXPECT_EQ(*(list.begin() + 3), 0);
 }
 
-TEST(test_suite_singly_linked_list, insert_after_test_001) {
+TEST(test_suite_singly_linked_list, insert_after_test) {
     tk::singly_linked_list<int> list;
 
-    list.add_front(1);
+    list.push_front(1);
     list.insert_after(list.begin(), 2);
 
     auto iterator(list.begin());
@@ -70,48 +70,21 @@ TEST(test_suite_singly_linked_list, insert_after_test_001) {
     }
 }
 
-TEST(test_suite_singly_linked_list, insert_after_test_002) {
+TEST(test_suite_singly_linked_list, remove_after_test) {
     tk::singly_linked_list<int> list;
 
-    list.add_front(2); // 1
-    list.add_front(4); // 0
-    list.insert_after(0, 3); // insert 3 at 1
-    EXPECT_EQ(list.count(), 3);
-
-    auto iterator(list.begin());
-
-    for (int i(4); i > 1; i--) {
-        EXPECT_EQ(*(iterator++), i);
-    }
-}
-
-TEST(test_suite_singly_linked_list, remove_after_test_001) {
-    tk::singly_linked_list<int> list;
-
-    list.add_front(1);
-    list.add_front(2);
+    list.push_front(1);
+    list.push_front(2);
     list.remove_after(list.begin());
 
     EXPECT_EQ(list.front(), 2);
-}
-
-TEST(test_suite_singly_linked_list, remove_after_test_002) {
-    tk::singly_linked_list<int> list;
-
-    list.add_front(2); // 2
-    list.add_front(3); // 1
-    list.add_front(4); // 0
-    list.remove_after(0); // remove at 1
-    EXPECT_EQ(list.count(), 2);
-    EXPECT_EQ(list.front(), 4);
-    EXPECT_EQ(*(list.begin() + 1), 2);
 }
 
 TEST(test_suite_singly_linked_list, iterator_test_001) {
     tk::singly_linked_list<int> list;
 
     for (int i(1); i <= 5; i++) {
-        list.add_front(i);
+        list.push_front(i);
     }
 
     EXPECT_EQ(list.count(), 5);
@@ -123,9 +96,9 @@ TEST(test_suite_singly_linked_list, iterator_test_001) {
 TEST(test_suite_singly_linked_list, iterator_test_002) {
     tk::singly_linked_list<int> list;
 
-    list.add_front(4);
-    list.add_front(3);
-    list.add_front(7);
+    list.push_front(4);
+    list.push_front(3);
+    list.push_front(7);
 
     for (auto& element : list) {
         if (element == 3) {
@@ -139,9 +112,9 @@ TEST(test_suite_singly_linked_list, iterator_test_002) {
 TEST(test_suite_singly_linked_list, iterator_test_003) {
     tk::singly_linked_list<int> list;
 
-    list.add_front(2);
-    list.add_front(8);
-    list.add_front(6);
+    list.push_front(2);
+    list.push_front(8);
+    list.push_front(6);
 
     auto iterator(list.begin());
 
