@@ -6,7 +6,21 @@
 #include <doubly_linked_list.h>
 
 TEST(test_suite_doubly_linked_list, initialize_test) {
+    tk::doubly_linked_list<int> list1{ 1, 2, 3 };
+    tk::doubly_linked_list<int> list2(3, 1);
+    int count(1);
 
+    EXPECT_EQ(list1.count(), 3);
+    EXPECT_EQ(list2.count(), 3);
+
+    for (auto const& value : list1) {
+        EXPECT_EQ(value, count);
+        count++;
+    }
+
+    for (auto const& value : list2) {
+        EXPECT_EQ(value, 1);
+    }
 }
 
 TEST(test_suite_doubly_linked_list, push_front_test) {
@@ -90,4 +104,26 @@ TEST(test_suite_doubly_linked_list, remove_test) {
     EXPECT_EQ(list.count(), 2);
     EXPECT_EQ(list.front(), 1);
     EXPECT_EQ(list.back(), 3);
+}
+
+TEST(test_suite_doubly_linked_list, iterator_test) {
+    tk::doubly_linked_list<int> list{ 0, 1, 2 };
+    int count(0);
+
+    for (auto const& value : list) {
+        EXPECT_EQ(value, count);
+
+        count++;
+    }
+}
+
+TEST(test_suite_doubly_linked_list, reverse_iterator_test) {
+    tk::doubly_linked_list<int> list { 2, 1, 0 };
+    int count(0);
+
+    for (auto iterator(list.crbegin()); iterator != list.crend(); iterator++) {
+        EXPECT_EQ(*iterator, count);
+
+        count++;
+    }
 }

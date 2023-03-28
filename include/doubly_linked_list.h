@@ -51,12 +51,12 @@ namespace tk {
                 return this->_cursor->_value;
             }
             pointer_type operator->() { return &this->_cursor->_value; }
-            iterator operator+(size_t index) {
+            virtual iterator operator+(size_t size) {
                 auto temp_cursor(this->_cursor);
                 size_t count(0);
 
                 while (temp_cursor) {
-                    if (count == index) {
+                    if (count == size) {
                         break;
                     }
 
@@ -66,14 +66,14 @@ namespace tk {
 
                 return iterator(temp_cursor);
             }
-            iterator& operator++() {
+            virtual iterator& operator++() {
                 if (this->_cursor) {
                     this->_cursor = this->_cursor->_next;
                 }
 
                 return *this;
             }
-            iterator operator++(value_type) {
+            virtual iterator operator++(value_type) {
                 auto temp_iterator(*this);
 
                 if (this->_cursor) {
@@ -82,7 +82,7 @@ namespace tk {
 
                 return temp_iterator;
             }
-            iterator& operator-(size_t size) {
+            virtual iterator operator-(size_t size) {
                 auto temp_cursor(this->_cursor);
                 size_t count(0);
 
@@ -97,14 +97,14 @@ namespace tk {
 
                 return iterator(temp_cursor);
             }
-            iterator& operator--() {
+            virtual iterator& operator--() {
                 if (this->_cursor) {
                     this->_cursor = this->_cursor->_prev;
                 }
 
                 return *this;
             }
-            iterator operator--(value_type) {
+            virtual iterator operator--(value_type) {
                 auto temp_iterator(*this);
 
                 if (this->_cursor) {
@@ -117,20 +117,62 @@ namespace tk {
             bool operator!=(iterator const& other) const { return this->_cursor != other._cursor; }
         };
 
+        template <typename rit>
+        class reverse_iterator : public iterator<rit> {
+        public:
+            reverse_iterator(std::shared_ptr<node> cursor) : iterator<rit>(cursor) {}
+            reverse_iterator(const iterator<rit>& base) : iterator<rit>(base) {}
+            iterator<rit> operator+(size_t size) override {
+                return iterator<rit>::operator-(size);
+            }
+            iterator<rit>& operator++() override {
+                *this = iterator<rit>::operator--();
+
+                return *this;
+            }
+            iterator<rit> operator++(typename iterator<rit>::value_type) override {
+                iterator<rit>::operator--(rit());
+
+                return *this;
+            }
+            iterator<rit> operator-(size_t size) override {
+                return iterator<rit>::operator+(size);
+            }
+            iterator<rit>& operator--() override {
+                *this = iterator<rit>::operator++();
+
+                return *this;
+            }
+            iterator<rit> operator--(typename iterator<rit>::value_type) override {
+                iterator<rit>::operator++(rit());
+
+                return *this;
+            }
+        };
+
     public:
         using iterator_type = iterator<t>;
         using const_iterator_type = iterator<t const>;
+        using reverse_iterator_type = reverse_iterator<t>;
+        using const_reverse_iterator_type = reverse_iterator<t const>;
 
-        doubly_linked_list(size_t count, t value) :
+        doubly_linked_list(std::initializer_list<t> list) :
         _front(nullptr),
         _back(nullptr),
-        _count(count) {
-            // ...
-            // 멤버 함수를 이용할 의향이 있음
+        _count(0) {
+            for (auto const& value : list) {
+                this->push_back(value);
+            }
         }
-        doubly_linked_list(size_t count) : doubly_linked_list(count, 0) {
-
+        doubly_linked_list(size_t count, t const& value) :
+        _front(nullptr),
+        _back(nullptr),
+        _count(0) {
+            for (int i(0); i < count; i++) {
+                this->push_back(value);
+            }
         }
+        doubly_linked_list(size_t count) : doubly_linked_list(count, 0) {}
         doubly_linked_list() : doubly_linked_list(0) {}
         ~doubly_linked_list() = default;
 
@@ -227,19 +269,9 @@ namespace tk {
         const_iterator_type cbegin() const { return iterator<t const>(this->_front); }
         iterator_type end() const { return iterator<t>(nullptr); }
         const_iterator_type cend() const { return iterator<t const>(nullptr); }
-
-        // reverse iterator는 어떤 식으로 구현되어야 할지 고민 중.
-        iterator_type rbegin() const {
-            return iterator<t>(this->_back);
-        }
-        const_iterator_type crbegin() const {
-            return iterator<t const>(this->_back);
-        }
-        iterator_type rend() const {
-            return iterator<t>(nullptr);
-        }
-        const_iterator_type crcend() const {
-            return iterator<t const>(nullptr);
-        }
+        reverse_iterator_type rbegin() const { return reverse_iterator<t>(this->_back); }
+        const_reverse_iterator_type crbegin() const { return reverse_iterator<t const>(this->_back); }
+        reverse_iterator_type rend() const { return reverse_iterator<t>(nullptr); }
+        const_reverse_iterator_type crend() const { return reverse_iterator<t const>(nullptr); }
     };
 }

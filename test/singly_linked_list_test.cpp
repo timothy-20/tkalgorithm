@@ -6,10 +6,22 @@
 #include <singly_linked_list.h>
 
 TEST(test_suite_singly_linked_list, initialize_test) {
-    tk::singly_linked_list<int> list;
+    tk::singly_linked_list<int> list1{ 0, 1, 2 };
+    tk::singly_linked_list<int> list2(3, 0);
+    int count(0);
 
-    EXPECT_EQ(list.count(), 0);
-    EXPECT_EQ(list.front(), 0);
+    EXPECT_EQ(list1.count(), 3);
+    EXPECT_EQ(list2.count(), 3);
+
+    for (auto const& value : list1) {
+        EXPECT_EQ(value, count);
+
+        count++;
+    }
+
+    for (auto const& value : list2) {
+        EXPECT_EQ(value, 0);
+    }
 }
 
 TEST(test_suite_singly_linked_list, push_front_test) {
