@@ -57,6 +57,14 @@ TEST(test_suite_singly_linked_list, assign_test_001) {
     EXPECT_EQ(*(list.begin() + 3), 0);
 }
 
+TEST(test_suite_singly_linked_list, assign_test_002) {
+    tk::singly_linked_list<int> list;
+
+    list.push_front(1);
+    list.push_front(2);
+    list.push_front(3);
+}
+
 TEST(test_suite_singly_linked_list, insert_after_test) {
     tk::singly_linked_list<int> list;
 
@@ -78,6 +86,15 @@ TEST(test_suite_singly_linked_list, remove_after_test) {
     list.remove_after(list.begin());
 
     EXPECT_EQ(list.front(), 2);
+}
+
+TEST(test_suite_singly_linked_list, before_front_test) {
+    tk::singly_linked_list<int> list;
+
+    list.push_front(1);
+    list.push_front(2);
+    list.insert_after(list.before_begin(), 0);
+    EXPECT_EQ(list.front(), 0);
 }
 
 TEST(test_suite_singly_linked_list, iterator_test_001) {

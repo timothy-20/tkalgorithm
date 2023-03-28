@@ -5,8 +5,10 @@
 #include <singly_linked_list.h>
 
 namespace tk {
+    // iterator implement
     template <typename t>
-    t& singly_linked_list<t>::iterator::operator*() {
+    template <typename it>
+    it& singly_linked_list<t>::iterator<it>::operator*() {
         if (this->_cursor == nullptr) {
             throw std::runtime_error("Unable to access, this pointer is nullptr.");
         }
@@ -15,9 +17,10 @@ namespace tk {
     }
 
     template <typename t>
-    typename singly_linked_list<t>::iterator singly_linked_list<t>::iterator::operator+(size_t index) {
+    template <typename it>
+    singly_linked_list<t>::iterator<it> singly_linked_list<t>::iterator<it>::operator+(size_t index) {
         size_t count(0);
-        node* temp_node(this->_cursor);
+        node<t>* temp_node(this->_cursor);
 
         while (temp_node) {
             if (count == index)
@@ -31,7 +34,8 @@ namespace tk {
     }
 
     template <typename t>
-    typename singly_linked_list<t>::iterator& singly_linked_list<t>::iterator::operator++() {
+    template <typename it>
+    singly_linked_list<t>::iterator<it>& singly_linked_list<t>::iterator<it>::operator++() {
         if (this->_cursor) {
             this->_cursor = this->_cursor->_next.get();
         }
@@ -40,7 +44,8 @@ namespace tk {
     }
 
     template <typename t>
-    typename singly_linked_list<t>::iterator singly_linked_list<t>::iterator::operator++(t) {
+    template <typename it>
+    singly_linked_list<t>::iterator<it> singly_linked_list<t>::iterator<it>::operator++(it) {
         iterator temp(*this);
 
         if (this->_cursor) {
@@ -50,24 +55,25 @@ namespace tk {
         return temp;
     }
 
+    // singly linked list implement
     template <typename t>
     void singly_linked_list<t>::push_front(const t &value) {
-        auto new_node(std::make_unique<node>(value));
-        new_node->_next = std::move(this->_front);
-        this->_front = std::move(new_node);
+        auto new_node(std::make_unique<node<t>>(value));
+        new_node->_next = std::move(this->_before_front->_next);
+        this->_before_front->_next = std::move(new_node);
         this->_count++;
     }
 
     template <typename t>
     void singly_linked_list<t>::pop_front() {
-        if (this->_front) {
-            this->_front = std::move(this->_front->_next);
+        if (this->_before_front->_next) {
+            this->_before_front->_next = std::move(this->_before_front->_next->_next);
             this->_count--;
         }
     }
 
     template <typename t>
-    void singly_linked_list<t>::assign(singly_linked_list::iterator iterator, const t &value) {
+    void singly_linked_list<t>::assign(singly_linked_list<t>::iterator<t> iterator, const t &value) {
         if (iterator == this->end()) {
             throw std::out_of_range("Unable to assign, target node is nullptr.");
         }
@@ -76,12 +82,7 @@ namespace tk {
     }
 
     template <typename t>
-    void singly_linked_list<t>::assign(size_t index, const t &value) {
-        this->assign(this->begin() + index, value);
-    }
-
-    template <typename t>
-    void singly_linked_list<t>::insert_after(singly_linked_list::iterator iterator, const t &value) {
+    void singly_linked_list<t>::insert_after(singly_linked_list<t>::iterator<const t> iterator, const t &value) {
         if (iterator == this->end()) {
             throw std::out_of_range("Unable to insert, target node is nullptr.");
         }
@@ -108,4 +109,6 @@ namespace tk {
     }
 
     template class singly_linked_list<int>;
+    template class singly_linked_list<int>::iterator<int>;
+    template class singly_linked_list<int>::iterator<const int>;
 }
