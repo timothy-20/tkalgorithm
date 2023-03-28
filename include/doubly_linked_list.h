@@ -120,7 +120,7 @@ namespace tk {
         template <typename rit>
         class reverse_iterator : public iterator<rit> {
         public:
-            reverse_iterator(std::shared_ptr<node> cursor) : iterator<rit>(cursor) {}
+            explicit reverse_iterator(std::shared_ptr<node> cursor) : iterator<rit>(cursor) {}
             reverse_iterator(const iterator<rit>& base) : iterator<rit>(base) {}
             iterator<rit> operator+(size_t size) override {
                 return iterator<rit>::operator-(size);
