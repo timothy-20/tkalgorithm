@@ -76,7 +76,6 @@ TEST(test_suite_singly_linked_list, remove_after_test) {
     list.push_front(1);
     list.push_front(2);
     list.remove_after(list.cbegin());
-
     EXPECT_EQ(list.front(), 2);
 }
 

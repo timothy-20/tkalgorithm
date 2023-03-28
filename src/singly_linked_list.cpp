@@ -19,8 +19,8 @@ namespace tk {
     template <typename t>
     template <typename it>
     typename singly_linked_list<t>::template iterator<it> singly_linked_list<t>::iterator<it>::operator+(size_t index) {
-        size_t count(0);
         node* temp_node(this->_cursor);
+        size_t count(0);
 
         while (temp_node) {
             if (count == index)

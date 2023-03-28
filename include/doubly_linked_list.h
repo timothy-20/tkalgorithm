@@ -15,7 +15,7 @@ namespace tk {
             std::shared_ptr<node> _next;
             t _value;
 
-            explicit node(const t& value) :
+            explicit node(t const& value) :
             _prev(nullptr),
             _next(nullptr),
             _value(value) {}
@@ -28,24 +28,30 @@ namespace tk {
         size_t _count;
 
     public:
+        template <typename it>
         class iterator {
+            friend class doubly_linked_list<t>;
+
         private:
-            node* _cursor;
+            std::shared_ptr<node> _cursor;
 
         public:
+            using value_type = it;
+            using pointer_type = it*;
+            using reference_type = it&;
             using difference_type = std::ptrdiff_t;
             using iterator_category = std::bidirectional_iterator_tag;
 
-            explicit iterator(node* cursor) : _cursor(cursor) {}
-            t& operator*() {
+            explicit iterator(std::shared_ptr<node> cursor) : _cursor(cursor) {}
+            reference_type operator*() {
                 if (this->_cursor == nullptr) {
                     throw std::out_of_range("Unable to access pointer. out of range of array.");
                 }
 
                 return this->_cursor->_value;
             }
-            node* operator->() { return this->_cursor; }
-            iterator& operator+(size_t index) {
+            pointer_type operator->() { return &this->_cursor->_value; }
+            iterator operator+(size_t index) {
                 auto temp_cursor(this->_cursor);
                 size_t count(0);
 
@@ -54,7 +60,7 @@ namespace tk {
                         break;
                     }
 
-                    temp_cursor = temp_cursor->_next.get();
+                    temp_cursor = temp_cursor->_next;
                     count++;
                 }
 
@@ -67,8 +73,8 @@ namespace tk {
 
                 return *this;
             }
-            iterator operator++(t) {
-                iterator temp_iterator(*this);
+            iterator operator++(value_type) {
+                auto temp_iterator(*this);
 
                 if (this->_cursor) {
                     this->_cursor = this->_cursor->_next;
@@ -85,7 +91,7 @@ namespace tk {
                         break;
                     }
 
-                    temp_cursor = temp_cursor->_prev.get();
+                    temp_cursor = temp_cursor->_prev;
                     count++;
                 }
 
@@ -98,7 +104,7 @@ namespace tk {
 
                 return *this;
             }
-            iterator operator--(t) {
+            iterator operator--(value_type) {
                 auto temp_iterator(*this);
 
                 if (this->_cursor) {
@@ -107,11 +113,14 @@ namespace tk {
 
                 return temp_iterator;
             }
-            bool operator==(const iterator& other) const { return this->_cursor == other._cursor; }
-            bool operator!=(const iterator& other) const { return this->_cursor != other._cursor; }
+            bool operator==(iterator const& other) const { return this->_cursor == other._cursor; }
+            bool operator!=(iterator const& other) const { return this->_cursor != other._cursor; }
         };
 
     public:
+        using iterator_type = iterator<t>;
+        using const_iterator_type = iterator<t const>;
+
         doubly_linked_list(size_t count, t value) :
         _front(nullptr),
         _back(nullptr),
@@ -125,7 +134,7 @@ namespace tk {
         doubly_linked_list() : doubly_linked_list(0) {}
         ~doubly_linked_list() = default;
 
-        void push_front(const t& value) {
+        void push_front(t const& value) {
             auto new_node(std::make_shared<node>(value));
 
             if (this->_front == nullptr) {
@@ -156,7 +165,7 @@ namespace tk {
 
             this->_count--;
         }
-        void push_back(const t& value) {
+        void push_back(t const& value) {
             auto new_node(std::make_shared<node>(value));
 
             if (this->_front == nullptr) {
@@ -187,16 +196,50 @@ namespace tk {
 
             this->_count--;
         }
-        void insert(iterator iterator, const t& value) {
-//            if (iterator == )
-        }
-        void remove(iterator iterator) {
+        void insert(const_iterator_type iterator, t const& value) {
+            if (iterator == this->cend()) {
+                throw std::out_of_range("Unable to insert node to doubly linked list. out of range of array.");
+            }
 
+            auto prev_node(iterator._cursor->_prev);
+            auto new_node(std::make_shared<node>(value));
+            new_node->_next = iterator._cursor;
+            iterator._cursor->_prev = new_node;
+            new_node->_prev = prev_node;
+            prev_node->_next = new_node;
+            this->_count++;
+        }
+        void remove(const_iterator_type iterator) {
+            if (iterator == this->cend()) {
+                throw std::out_of_range("Unable to remove node to doubly linked list. out of range of array.");
+            }
+
+            auto prev_node(iterator._cursor->_prev);
+            auto next_node(iterator._cursor->_next);
+            prev_node->_next = next_node;
+            next_node->_prev = prev_node;
+            this->_count--;
         }
         size_t count() const { return this->_count; }
         t front() const { return this->_front ? this->_front->_value : t(); }
         t back() const { return this->_back ? this->_back->_value : t(); }
-        iterator begin() { return iterator(this->_front.get()); }
-        iterator end() { return iterator(nullptr); }
+        iterator_type begin() const { return iterator<t>(this->_front); }
+        const_iterator_type cbegin() const { return iterator<t const>(this->_front); }
+        iterator_type end() const { return iterator<t>(nullptr); }
+        const_iterator_type cend() const { return iterator<t const>(nullptr); }
+
+        // reverse iterator는 어떤 식으로 구현되어야 할지 고민 중.
+        iterator_type rbegin() const {
+            return iterator<t>(this->_back);
+        }
+        const_iterator_type crbegin() const {
+            return iterator<t const>(this->_back);
+        }
+        iterator_type rend() const {
+            return iterator<t>(nullptr);
+        }
+        const_iterator_type crcend() const {
+            return iterator<t const>(nullptr);
+        }
     };
 }

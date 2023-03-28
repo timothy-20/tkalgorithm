@@ -64,9 +64,30 @@ TEST(test_suite_doubly_linked_list, pop_back_test) {
 }
 
 TEST(test_suite_doubly_linked_list, insert_test) {
+    tk::doubly_linked_list<int> list;
 
+    list.push_front(1);
+    list.push_back(3);
+    list.insert(list.cbegin() + 1, 2);
+    EXPECT_EQ(list.count(), 3);
+
+    int count(1);
+
+    for (auto const& element : list) {
+        EXPECT_EQ(element, count);
+
+        count++;
+    }
 }
 
 TEST(test_suite_doubly_linked_list, remove_test) {
+    tk::doubly_linked_list<int> list;
 
+    list.push_back(1);
+    list.push_back(2);
+    list.push_back(3);
+    list.remove(list.cbegin() + 1);
+    EXPECT_EQ(list.count(), 2);
+    EXPECT_EQ(list.front(), 1);
+    EXPECT_EQ(list.back(), 3);
 }
