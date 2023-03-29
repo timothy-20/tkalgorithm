@@ -32,12 +32,12 @@ namespace tk {
             _index(index) {}
             reference operator*() const;
             pointer operator->() const;
-            virtual iterator operator+(size_t size);
-            virtual iterator& operator+=(size_t size);
+            virtual iterator operator+(difference_type n);
+            virtual iterator& operator+=(difference_type n);
             virtual iterator& operator++();
             virtual iterator operator++(value_type);
-            virtual iterator operator-(size_t size);
-            virtual iterator& operator-=(size_t size);
+            virtual iterator operator-(difference_type n);
+            virtual iterator& operator-=(difference_type n);
             virtual iterator& operator--();
             virtual iterator operator--(value_type);
             bool operator==(iterator const& other) const { return this->_list == other._list && this->_index == other._index; }
@@ -52,12 +52,12 @@ namespace tk {
         class reverse_iterator : public iterator<rit> {
         public:
             reverse_iterator(iterator<rit> const& other) : iterator<rit>(other) {}
-            iterator<rit> operator+(size_t size) override;
-            iterator<rit>& operator+=(size_t size) override;
+            iterator<rit> operator+(iterator<rit>::difference_type n) override;
+            iterator<rit>& operator+=(iterator<rit>::difference_type n) override;
             iterator<rit>& operator++() override;
             iterator<rit> operator++(typename iterator<rit>::value_type) override;
-            iterator<rit> operator-(size_t size) override;
-            iterator<rit>& operator-=(size_t size) override;
+            iterator<rit> operator-(iterator<rit>::difference_type n) override;
+            iterator<rit>& operator-=(iterator<rit>::difference_type n) override;
             iterator<rit>& operator--() override;
             iterator<rit> operator--(typename iterator<rit>::value_type) override;
         };

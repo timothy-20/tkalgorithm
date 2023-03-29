@@ -29,8 +29,8 @@ namespace tk {
 
     template <typename t>
     template <typename it>
-    typename dynamic_array<t>::template iterator<it> dynamic_array<t>::iterator<it>::operator+(size_t size) {
-        size_t index(this->_index + size);
+    typename dynamic_array<t>::template iterator<it> dynamic_array<t>::iterator<it>::operator+(difference_type n) {
+        size_t index(this->_index + n);
 
         if (index >= this->_list->_count) {
             return iterator(nullptr, this->_list->_count);
@@ -41,8 +41,8 @@ namespace tk {
 
     template <typename t>
     template <typename it>
-    typename dynamic_array<t>::template iterator<it>& dynamic_array<t>::iterator<it>::operator+=(size_t size) {
-        *this = *this + size;
+    typename dynamic_array<t>::template iterator<it>& dynamic_array<t>::iterator<it>::operator+=(difference_type n) {
+        *this = *this + n;
 
         return *this;
     }
@@ -77,18 +77,18 @@ namespace tk {
 
     template <typename t>
     template <typename it>
-    typename dynamic_array<t>::template iterator<it> dynamic_array<t>::iterator<it>::operator-(size_t size) {
-        if (this->_index - size < 0) {
+    typename dynamic_array<t>::template iterator<it> dynamic_array<t>::iterator<it>::operator-(difference_type n) {
+        if (this->_index - n < 0) {
             return iterator(nullptr, -1);
         }
 
-        return iterator(this->_list, this->_index - size);
+        return iterator(this->_list, this->_index - n);
     }
 
     template <typename t>
     template <typename it>
-    typename dynamic_array<t>::template iterator<it>& dynamic_array<t>::iterator<it>::operator-=(size_t size) {
-        *this = *this - size;
+    typename dynamic_array<t>::template iterator<it>& dynamic_array<t>::iterator<it>::operator-=(difference_type n) {
+        *this = *this - n;
 
         return *this;
     }
@@ -124,14 +124,14 @@ namespace tk {
     // reverse iterator implementation
     template <typename t>
     template <typename rit>
-    typename dynamic_array<t>::template iterator<rit> dynamic_array<t>::reverse_iterator<rit>::operator+(size_t size) {
-        return iterator<rit>::operator-(size);
+    typename dynamic_array<t>::template iterator<rit> dynamic_array<t>::reverse_iterator<rit>::operator+(typename dynamic_array<t>::iterator<rit>::difference_type n) {
+        return iterator<rit>::operator-(n);
     }
 
     template <typename t>
     template <typename rit>
-    typename dynamic_array<t>::template iterator<rit>& dynamic_array<t>::reverse_iterator<rit>::operator+=(size_t size) {
-        *this = iterator<rit>::operator-=(size);
+    typename dynamic_array<t>::template iterator<rit>& dynamic_array<t>::reverse_iterator<rit>::operator+=(typename dynamic_array<t>::iterator<rit>::difference_type n) {
+        *this = iterator<rit>::operator-=(n);
 
         return *this;
     }
@@ -152,14 +152,14 @@ namespace tk {
 
     template <typename t>
     template <typename rit>
-    typename dynamic_array<t>::template iterator<rit> dynamic_array<t>::reverse_iterator<rit>::operator-(size_t size) {
-        return iterator<rit>::operator+(size);
+    typename dynamic_array<t>::template iterator<rit> dynamic_array<t>::reverse_iterator<rit>::operator-(typename dynamic_array<t>::iterator<rit>::difference_type n) {
+        return iterator<rit>::operator+(n);
     }
 
     template <typename t>
     template <typename rit>
-    typename dynamic_array<t>::template iterator<rit>& dynamic_array<t>::reverse_iterator<rit>::operator-=(size_t size) {
-        *this = iterator<rit>::operator+=(size);
+    typename dynamic_array<t>::template iterator<rit>& dynamic_array<t>::reverse_iterator<rit>::operator-=(typename dynamic_array<t>::iterator<rit>::difference_type n) {
+        *this = iterator<rit>::operator+=(n);
 
         return *this;
     }
