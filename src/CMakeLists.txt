@@ -5,11 +5,11 @@ file(
 )
 set(
         SOURCE
-        dynamic_array.cpp
-        queue.cpp
         singly_linked_list.cpp
         doubly_linked_list.cpp
-        ../include/skip_list.h)
+        dynamic_array.cpp
+        queue.cpp
+        ../include/utility.h)
 
 add_library(library SHARED ${SOURCE})
 target_include_directories(library PUBLIC ${PROJECT_SOURCE_DIR}/include)

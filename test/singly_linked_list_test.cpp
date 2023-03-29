@@ -59,14 +59,18 @@ TEST(test_suite_singly_linked_list, assign_test) {
         list.push_front(0);
     }
 
-    list.assign(list.begin(), 10);
-    list.assign(list.begin() + 1, 2);
-    list.assign(list.begin() + 2, 3);
+    auto iterator1(list.begin());
 
-    EXPECT_EQ(list.front(), 10);
-    EXPECT_EQ(*(list.begin() + 1), 2);
-    EXPECT_EQ(*(list.begin() + 2), 3);
-    EXPECT_EQ(*(list.begin() + 3), 0);
+    list.assign(iterator1, 10);
+    list.assign(++iterator1, 2);
+    list.assign(++iterator1, 3);
+
+    auto iterator2(list.begin());
+
+    EXPECT_EQ(*(iterator2++), 10);
+    EXPECT_EQ(*(iterator2++), 2);
+    EXPECT_EQ(*(iterator2++), 3);
+    EXPECT_EQ(*iterator2, 0);
 }
 
 TEST(test_suite_singly_linked_list, insert_after_test) {
@@ -103,19 +107,6 @@ TEST(test_suite_singly_linked_list, before_front_test) {
 TEST(test_suite_singly_linked_list, iterator_test_001) {
     tk::singly_linked_list<int> list;
 
-    for (int i(1); i <= 5; i++) {
-        list.push_front(i);
-    }
-
-    EXPECT_EQ(list.count(), 5);
-    EXPECT_EQ(*(list.begin() + 3), 2);
-    EXPECT_EQ(*(list.begin() + 1), 4);
-    EXPECT_ANY_THROW(*(list.begin() + 10));
-}
-
-TEST(test_suite_singly_linked_list, iterator_test_002) {
-    tk::singly_linked_list<int> list;
-
     list.push_front(4);
     list.push_front(3);
     list.push_front(7);
@@ -126,10 +117,10 @@ TEST(test_suite_singly_linked_list, iterator_test_002) {
         }
     }
 
-    EXPECT_EQ(*(list.begin() + 1), 6);
+    EXPECT_EQ(*(++list.begin()), 6);
 }
 
-TEST(test_suite_singly_linked_list, iterator_test_003) {
+TEST(test_suite_singly_linked_list, iterator_test_002) {
     tk::singly_linked_list<int> list;
 
     list.push_front(2);

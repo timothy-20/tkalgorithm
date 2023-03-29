@@ -22,8 +22,8 @@ namespace tk {
         template <typename it>
         class iterator {
         private:
-            dynamic_array<it>* _list;
-            size_t _index;
+            dynamic_array* _list;
+            int64_t _index;
 
         public:
             using value_type = it;
@@ -32,102 +32,47 @@ namespace tk {
             using difference_type = std::ptrdiff_t;
             using iterator_category = std::random_access_iterator_tag;
 
-            explicit iterator(dynamic_array<it>*list, size_t index = 0) :
+            explicit iterator(dynamic_array* list, int64_t const& index = 0) :
             _list(list),
             _index(index) {}
-            reference_type operator*() const {
-                if (this->_list == nullptr) {
-                    throw std::out_of_range("Unable to access dynamic array element with reference.");
-                }
-
-                return this->_list[this->_index];
-            }
-
-            pointer_type operator->() const {
-                if (this->_list == nullptr) {
-                    throw std::out_of_range("Unable to access dynamic array element with pointer.");
-                }
-
-                return &this->_list[this->_index];
-            }
-
-            virtual iterator operator+(size_t size) {
-                if (this->_list.count() <= this->_index + size) {
-                    return iterator(nullptr);
-                }
-
-                return iterator(this->_list, this->_index + size);
-            }
-
-            virtual iterator& operator++() {
-                if (this->_index < this->_list.count()) {
-                    this->_index++;
-                }
-
-                return *this;
-            }
-
-            virtual iterator operator++(value_type) {
-                iterator temp_iterator(*this);
-
-                if (this->_index < this->_list.count()) {
-                    this->_index++;
-                }
-
-                return temp_iterator;
-            }
-
-            virtual iterator operator-(size_t size) {
-                if (this->_index - size < 0) {
-                    return iterator(nullptr);
-                }
-
-                return iterator(this->_list, this->_index - size);
-            }
-
-            virtual iterator& operator--() {
-                if (this->_index >= 0) {
-                    this->_index--;
-                }
-
-                return *this;
-            }
-
-            virtual iterator operator--(value_type) {
-                iterator temp_iterator(*this);
-
-                if (this->_index >= 0) {
-                    this->_index--;
-                }
-
-                return temp_iterator;
-            }
+            reference_type operator*() const;
+            pointer_type operator->() const;
+            virtual iterator operator+(size_t size);
+            virtual iterator& operator+=(size_t size);
+            virtual iterator& operator++();
+            virtual iterator operator++(value_type);
+            virtual iterator operator-(size_t size);
+            virtual iterator& operator-=(size_t size);
+            virtual iterator& operator--();
+            virtual iterator operator--(value_type);
             bool operator==(iterator const& other) const { return this->_list == other._list && this->_index == other._index; }
             bool operator!=(iterator const& other) const { return this->_list != other._list || this->_index != other._index; }
-
-            // 추가적인 operator들을 지원할 계획입니다.
+            bool operator<(iterator const& other) const { return this->_list == other._list && this->_index < other._index; }
+            bool operator<=(iterator const& other) const { return this->_list == other._list && this->_index <= other._index; }
+            bool operator>(iterator const& other) const { return this->_list == other._list && this->_index > other._index; }
+            bool operator>=(iterator const& other) const { return this->_list == other._list && this->_index >= other._index; }
         };
 
         template <typename rit>
         class reverse_iterator : public iterator<rit> {
-            friend class dynamic_array<t>;
-
         public:
             reverse_iterator(iterator<rit> const& other) : iterator<rit>(other) {}
-            iterator<rit> operator+(size_t size) override {
-
-            }
-
-            iterator<rit>& operator++() override {
-
-            }
-
-            iterator<rit> operator++(iterator<rit>::value_type) override {
-
-            }
+            iterator<rit> operator+(size_t size) override;
+            iterator<rit>& operator+=(size_t size) override;
+            iterator<rit>& operator++() override;
+            iterator<rit> operator++(typename iterator<rit>::value_type) override;
+            iterator<rit> operator-(size_t size) override;
+            iterator<rit>& operator-=(size_t size) override;
+            iterator<rit>& operator--() override;
+            iterator<rit> operator--(typename iterator<rit>::value_type) override;
         };
 
     public:
+        using iterator_type = iterator<t>;
+        using const_iterator_type = iterator<t const>;
+        using reverse_iterator_type = reverse_iterator<t>;
+        using const_reverse_iterator_type = reverse_iterator<t const>;
+
         dynamic_array(std::initializer_list<t> list) :
         _capacity(list.size() > 0 ? list.size() * 2 : 10),
         _count(0),
@@ -149,24 +94,21 @@ namespace tk {
         ~dynamic_array() { delete[] this->_list; }
         void push_back(t value);
         void pop_back();
-        void insert(t value, size_t index);
-        void remove(size_t index);
-        t& operator[] (size_t index); // throwable
-        t front() const {
-            if (this->_count == 0) {
-                throw std::out_of_range("Unable to access front of dynamic array.");
-            }
-
-            return this->_list[0];
-        }
-        t back() const {
-            if (this->_count == 0) {
-                throw std::out_of_range("Unable to access back of dynamic array.");
-            }
-
-            return this->_list[this->_count - 1];
-        }
+        void insert(const_iterator_type iterator, t const& value);
+        void remove(const_iterator_type iterator);
+        void resize(size_t size, t const& value = t());
+        t& operator[] (size_t index);
+        t front() const;
+        t back() const;
         size_t count() const { return this->_count; }
         size_t capacity() const { return this->_capacity; }
+        iterator_type begin() { return iterator<t>(this); }
+        const_iterator_type cbegin() { return iterator<t const>(this); }
+        reverse_iterator_type rbegin() { return iterator<t>(this, this->_count - 1); }
+        const_reverse_iterator_type crbegin() { return iterator<t const>(this, this->_count - 1); }
+        iterator_type end() { return iterator<t>(nullptr, this->_count); }
+        const_iterator_type cend() { return iterator<t const>(nullptr, this->_count); }
+        reverse_iterator_type rend() { return iterator<t>(nullptr, -1); }
+        const_reverse_iterator_type crend() { return iterator<t const>(nullptr, -1); }
     };
 }
