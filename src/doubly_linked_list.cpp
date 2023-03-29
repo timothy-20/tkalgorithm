@@ -10,7 +10,7 @@ namespace tk {
     template <typename it>
     it& doubly_linked_list<t>::iterator<it>::operator*() {
         if (this->_cursor == nullptr) {
-            throw std::out_of_range("Unable to access pointer. out of range of array.");
+            throw std::out_of_range("Unable to access doubly linked list element with reference.");
         }
 
         return this->_cursor->_value;
@@ -18,20 +18,12 @@ namespace tk {
 
     template <typename t>
     template <typename it>
-    typename doubly_linked_list<t>::template iterator<it> doubly_linked_list<t>::iterator<it>::operator+(size_t size) {
-        auto temp_cursor(this->_cursor);
-        size_t count(0);
-
-        while (temp_cursor) {
-            if (count == size) {
-                break;
-            }
-
-            temp_cursor = temp_cursor->_next;
-            count++;
+    it* doubly_linked_list<t>::iterator<it>::operator->()  {
+        if (this->_cursor == nullptr) {
+            throw std::out_of_range("Unable to access doubly linked list element with pointer.");
         }
 
-        return iterator(temp_cursor);
+        return &this->_cursor->_value;
     }
 
     template <typename t>
@@ -54,24 +46,6 @@ namespace tk {
         }
 
         return temp_iterator;
-    }
-
-    template <typename t>
-    template <typename it>
-    typename doubly_linked_list<t>::template iterator<it> doubly_linked_list<t>::iterator<it>::operator-(size_t size) {
-        auto temp_cursor(this->_cursor);
-        size_t count(0);
-
-        while (temp_cursor) {
-            if (count == size) {
-                break;
-            }
-
-            temp_cursor = temp_cursor->_prev;
-            count++;
-        }
-
-        return iterator(temp_cursor);
     }
 
     template <typename t>
@@ -99,12 +73,6 @@ namespace tk {
     // reverse iterator implementation
     template <typename t>
     template <typename rit>
-    typename doubly_linked_list<t>::template iterator<rit> doubly_linked_list<t>::reverse_iterator<rit>::operator+(size_t size) {
-        return iterator<rit>::operator-(size);
-    }
-
-    template <typename t>
-    template <typename rit>
     typename doubly_linked_list<t>::template iterator<rit>& doubly_linked_list<t>::reverse_iterator<rit>::operator++() {
         *this = iterator<rit>::operator--();
 
@@ -115,12 +83,6 @@ namespace tk {
     template <typename rit>
     typename doubly_linked_list<t>::template iterator<rit> doubly_linked_list<t>::reverse_iterator<rit>::operator++(typename doubly_linked_list<t>::iterator<rit>::value_type) {
         return iterator<rit>::operator--(rit());
-    }
-
-    template <typename t>
-    template <typename rit>
-    typename doubly_linked_list<t>::template iterator<rit> doubly_linked_list<t>::reverse_iterator<rit>::operator-(size_t size) {
-        return iterator<rit>::operator+(size);
     }
 
     template <typename t>

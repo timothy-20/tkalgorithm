@@ -10,7 +10,7 @@ namespace tk {
     template <typename it>
     it& singly_linked_list<t>::iterator<it>::operator*() {
         if (this->_cursor == nullptr) {
-            throw std::runtime_error("Unable to access, this pointer is nullptr.");
+            throw std::runtime_error("Unable to access singly linked list element with reference.");
         }
 
         return this->_cursor->_value;
@@ -18,19 +18,12 @@ namespace tk {
 
     template <typename t>
     template <typename it>
-    typename singly_linked_list<t>::template iterator<it> singly_linked_list<t>::iterator<it>::operator+(size_t index) {
-        node* temp_node(this->_cursor);
-        size_t count(0);
-
-        while (temp_node) {
-            if (count == index)
-                break;
-
-            temp_node = temp_node->_next.get();
-            count++;
+    it* singly_linked_list<t>::iterator<it>::operator->() {
+        if (this->_cursor == nullptr) {
+            throw std::runtime_error("Unable to access singly linked list element with pointer.");
         }
 
-        return iterator(temp_node);
+        return &this->_cursor->_value;
     }
 
     template <typename t>

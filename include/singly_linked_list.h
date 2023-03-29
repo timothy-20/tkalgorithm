@@ -41,8 +41,7 @@ namespace tk {
 
             explicit iterator(node* cursor) : _cursor(cursor) {}
             reference_type operator*();
-            pointer_type operator->() { return &this->_cursor->_value; }
-            iterator operator+(size_t index);
+            pointer_type operator->();
             iterator& operator++();
             iterator operator++(value_type);
             bool operator==(iterator const& other) const { return this->_cursor == other._cursor; }
@@ -69,7 +68,6 @@ namespace tk {
         }
         singly_linked_list(size_t count) : singly_linked_list(count, 0) {}
         singly_linked_list() : singly_linked_list(0) {}
-
         ~singly_linked_list() = default;
         void push_front(t const& value);
         void pop_front();

@@ -44,11 +44,9 @@ namespace tk {
 
             explicit iterator(std::shared_ptr<node> cursor) : _cursor(cursor) {}
             reference_type operator*();
-            pointer_type operator->() { return &this->_cursor->_value; }
-            virtual iterator operator+(size_t size);
+            pointer_type operator->();
             virtual iterator& operator++();
             virtual iterator operator++(value_type);
-            virtual iterator operator-(size_t size);
             virtual iterator& operator--();
             virtual iterator operator--(value_type);
             bool operator==(iterator const& other) const { return this->_cursor == other._cursor; }
@@ -58,12 +56,9 @@ namespace tk {
         template <typename rit>
         class reverse_iterator : public iterator<rit> {
         public:
-            explicit reverse_iterator(std::shared_ptr<node> cursor) : iterator<rit>(cursor) {}
             reverse_iterator(const iterator<rit>& base) : iterator<rit>(base) {}
-            iterator<rit> operator+(size_t size) override;
             iterator<rit>& operator++() override;
             iterator<rit> operator++(typename iterator<rit>::value_type) override;
-            iterator<rit> operator-(size_t size) override;
             iterator<rit>& operator--() override;
             iterator<rit> operator--(typename iterator<rit>::value_type) override;
         };
@@ -107,9 +102,9 @@ namespace tk {
         const_iterator_type cbegin() const { return iterator<t const>(this->_front); }
         iterator_type end() const { return iterator<t>(nullptr); }
         const_iterator_type cend() const { return iterator<t const>(nullptr); }
-        reverse_iterator_type rbegin() const { return reverse_iterator<t>(this->_back); }
-        const_reverse_iterator_type crbegin() const { return reverse_iterator<t const>(this->_back); }
-        reverse_iterator_type rend() const { return reverse_iterator<t>(nullptr); }
-        const_reverse_iterator_type crend() const { return reverse_iterator<t const>(nullptr); }
+        reverse_iterator_type rbegin() const { return iterator<t>(this->_back); }
+        const_reverse_iterator_type crbegin() const { return iterator<t const>(this->_back); }
+        reverse_iterator_type rend() const { return iterator<t>(nullptr); }
+        const_reverse_iterator_type crend() const { return iterator<t const>(nullptr); }
     };
 }
