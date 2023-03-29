@@ -37,14 +37,14 @@ namespace tk {
 
         public:
             using value_type = it;
-            using pointer_type = it*;
-            using reference_type = it&;
+            using pointer = it*;
+            using reference = it&;
             using difference_type = std::ptrdiff_t;
             using iterator_category = std::bidirectional_iterator_tag;
 
             explicit iterator(std::shared_ptr<node> cursor) : _cursor(cursor) {}
-            reference_type operator*();
-            pointer_type operator->();
+            reference operator*();
+            pointer operator->();
             virtual iterator& operator++();
             virtual iterator operator++(value_type);
             virtual iterator& operator--();

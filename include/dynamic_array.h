@@ -13,11 +13,6 @@ namespace tk {
         size_t _count;
         t* _list;
 
-    private:
-        static t* reallocate(t *list, size_t capacity);
-        void grow_capacity();
-        void shrink_capacity();
-
     public:
         template <typename it>
         class iterator {
@@ -27,16 +22,16 @@ namespace tk {
 
         public:
             using value_type = it;
-            using pointer_type = it*;
-            using reference_type = it&;
+            using pointer = it*;
+            using reference = it&;
             using difference_type = std::ptrdiff_t;
             using iterator_category = std::random_access_iterator_tag;
 
             explicit iterator(dynamic_array* list, int64_t const& index = 0) :
             _list(list),
             _index(index) {}
-            reference_type operator*() const;
-            pointer_type operator->() const;
+            reference operator*() const;
+            pointer operator->() const;
             virtual iterator operator+(size_t size);
             virtual iterator& operator+=(size_t size);
             virtual iterator& operator++();

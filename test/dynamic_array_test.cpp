@@ -9,7 +9,7 @@ TEST(test_suite_dynamic_array, initialize_test) {
 
 }
 
-TEST(test_suite_dynamic_array, add_test) {
+TEST(test_suite_dynamic_array, push_back_test) {
     tk::dynamic_array<int> arr(5);
 
     for (int i(0); i < 5; i++) {
@@ -18,6 +18,21 @@ TEST(test_suite_dynamic_array, add_test) {
 
     EXPECT_EQ(arr.count(), 5);
     EXPECT_EQ(arr[2], 2);
+}
+
+TEST(test_suite_dynamic_array, pop_back_test) {
+    tk::dynamic_array<int> arr(5);
+
+    for (int i(0); i < 5; i++) {
+        arr.push_back(i);
+    }
+
+    for (int i(0); i < 3; i++) {
+        arr.pop_back();
+    }
+
+    EXPECT_EQ(arr.count(), 2);
+    EXPECT_EQ(arr[1], 1);
 }
 
 TEST(test_suite_dynamic_array, insert_test) {
@@ -31,21 +46,6 @@ TEST(test_suite_dynamic_array, insert_test) {
     EXPECT_EQ(arr[2], 10);
     EXPECT_EQ(arr[3], 2);
     EXPECT_EQ(arr[5], 4);
-}
-
-TEST(test_suite_dynamic_array, remove_last_object_test) {
-    tk::dynamic_array<int> arr(5);
-
-    for (int i(0); i < 5; i++) {
-        arr.push_back(i);
-    }
-
-    for (int i(0); i < 3; i++) {
-        arr.pop_back();
-    }
-
-    EXPECT_EQ(arr.count(), 2);
-    EXPECT_EQ(arr[1], 1);
 }
 
 TEST(test_suite_dynamic_array, remove_test) {
@@ -62,6 +62,10 @@ TEST(test_suite_dynamic_array, remove_test) {
     EXPECT_EQ(arr[2], 3);
     EXPECT_EQ(arr[3], 4);
     EXPECT_ANY_THROW(arr[4]);
+}
+
+TEST(test_suite_dynamic_array, resize_test) {
+
 }
 
 TEST(test_suite_dynamic_array, expand_test) {

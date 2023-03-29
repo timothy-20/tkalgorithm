@@ -3,6 +3,7 @@
 //
 
 #include <dynamic_array.h>
+#include <iterator>
 
 namespace tk {
     // iterator implementation
@@ -179,7 +180,7 @@ namespace tk {
 
     // dynamic array implementation
     template <typename t>
-    t* dynamic_array<t>::reallocate(t *list, size_t capacity) {
+    t* reallocate(t *list, size_t capacity) {
         auto new_list(new t[capacity]);
 
         for (int i(0); (i < capacity && &list[i] != nullptr); i++) {
@@ -190,67 +191,59 @@ namespace tk {
     }
 
     template <typename t>
-    void dynamic_array<t>::grow_capacity() {
-        this->_capacity *= 2;
-        this->_list = dynamic_array<t>::reallocate(this->_list,this->_capacity);
-    }
-
-    template <typename t>
-    void dynamic_array<t>::shrink_capacity() {
-        this->_capacity /= 2;
-        this->_list = dynamic_array<t>::reallocate(this->_list,this->_capacity);
-    }
-
-    template <typename t>
     void dynamic_array<t>::push_back(t value) {
         if (this->_count == this->_capacity) {
-            this->grow_capacity();
+            this->_capacity *= 2;
+
         }
 
+        this->_list = reallocate<t>(this->_list, this->_capacity);
         this->_list[this->_count] = value;
         this->_count++;
     }
 
     template <typename t>
     void dynamic_array<t>::pop_back() {
+        if (this->_count <= (this->_capacity / 4)) {
+            this->_capacity /= 2;
+        }
+
+        this->_list = reallocate<t>(this->_list, this->_capacity);
         this->_list[this->_count] = t();
         this->_count--;
-
-        if (this->_count <= (this->_capacity / 4)) {
-            this->shrink_capacity();
-        }
     }
 
     template <typename t>
-    void dynamic_array<t>::insert(dynamic_array<t>::const_iterator_type iterator, t const& value) {
-        if (this->_count == this->_capacity) {
-            this->grow_capacity();
-        }
+    void dynamic_array<t>::insert(typename dynamic_array<t>::const_iterator_type iterator, t const& value) {
+        size_t index(std::distance(this->cbegin(), iterator));
 
-        for (size_t i(this->_count); i > index; i--) {
-            this->_list[i] = std::move(this->_list[i - 1]);
-        }
-
-        this->_list[index] = value;
         this->_count++;
     }
 
     template <typename t>
-    void dynamic_array<t>::remove(dynamic_array<t>::const_iterator_type iterator) {
-        for (size_t i(index); i < this->_count; i++) {
-            this->_list[i] = std::move(this->_list[i + 1]);
-        }
+    void dynamic_array<t>::remove(typename dynamic_array<t>::const_iterator_type iterator) {
 
         this->_count--;
-
-        if (this->_count <= (this->_capacity / 4)) {
-            this->shrink_capacity();
-        }
     }
 
     template <typename t>
     void dynamic_array<t>::resize(size_t size, t const& value) {
-        // ...
+        if (size == this->_capacity) {
+            this->_capacity *= 2;
+
+        } else if (size <= this->_capacity / 4) {
+            this->_capacity /= 2;
+        }
+
+        this->_list = reallocate<t>(this->_list, this->_capacity);
+
+        if (size > this->_count) {
+            for (int i(this->_count); i < size; i++) {
+                this->_list[i] = value;
+            }
+        }
+
+        this->_count = size;
     }
 
     template <typename t>

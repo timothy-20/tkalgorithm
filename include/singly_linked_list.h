@@ -34,14 +34,14 @@ namespace tk {
 
         public:
             using value_type = it;
-            using pointer_type = it*;
-            using reference_type = it&;
+            using pointer = it*;
+            using reference = it&;
             using difference_type = std::ptrdiff_t;
             using iterator_category = std::forward_iterator_tag;
 
             explicit iterator(node* cursor) : _cursor(cursor) {}
-            reference_type operator*();
-            pointer_type operator->();
+            reference operator*();
+            pointer operator->();
             iterator& operator++();
             iterator operator++(value_type);
             bool operator==(iterator const& other) const { return this->_cursor == other._cursor; }
