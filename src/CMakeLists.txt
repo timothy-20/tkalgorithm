@@ -5,9 +5,10 @@ file(
 )
 set(
         SOURCE
-        array.cpp
+        dynamic_array.cpp
         queue.cpp
         singly_linked_list.cpp
+        doubly_linked_list.cpp
 )
 
 add_library(library SHARED ${SOURCE})

@@ -2,7 +2,7 @@
 // Created by aircuve on 2023-03-23.
 //
 
-#include <array.h>
+#include <dynamic_array.h>
 
 namespace tk {
     // dynamic array implementation
@@ -84,8 +84,6 @@ namespace tk {
 
         return this->_list[index];
     }
-
-    // ...
 
     template class dynamic_array<int>;
 }

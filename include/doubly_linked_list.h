@@ -43,76 +43,14 @@ namespace tk {
             using iterator_category = std::bidirectional_iterator_tag;
 
             explicit iterator(std::shared_ptr<node> cursor) : _cursor(cursor) {}
-            reference_type operator*() {
-                if (this->_cursor == nullptr) {
-                    throw std::out_of_range("Unable to access pointer. out of range of array.");
-                }
-
-                return this->_cursor->_value;
-            }
+            reference_type operator*();
             pointer_type operator->() { return &this->_cursor->_value; }
-            virtual iterator operator+(size_t size) {
-                auto temp_cursor(this->_cursor);
-                size_t count(0);
-
-                while (temp_cursor) {
-                    if (count == size) {
-                        break;
-                    }
-
-                    temp_cursor = temp_cursor->_next;
-                    count++;
-                }
-
-                return iterator(temp_cursor);
-            }
-            virtual iterator& operator++() {
-                if (this->_cursor) {
-                    this->_cursor = this->_cursor->_next;
-                }
-
-                return *this;
-            }
-            virtual iterator operator++(value_type) {
-                auto temp_iterator(*this);
-
-                if (this->_cursor) {
-                    this->_cursor = this->_cursor->_next;
-                }
-
-                return temp_iterator;
-            }
-            virtual iterator operator-(size_t size) {
-                auto temp_cursor(this->_cursor);
-                size_t count(0);
-
-                while (temp_cursor) {
-                    if (count == size) {
-                        break;
-                    }
-
-                    temp_cursor = temp_cursor->_prev;
-                    count++;
-                }
-
-                return iterator(temp_cursor);
-            }
-            virtual iterator& operator--() {
-                if (this->_cursor) {
-                    this->_cursor = this->_cursor->_prev;
-                }
-
-                return *this;
-            }
-            virtual iterator operator--(value_type) {
-                auto temp_iterator(*this);
-
-                if (this->_cursor) {
-                    this->_cursor = this->_cursor->_prev;
-                }
-
-                return temp_iterator;
-            }
+            virtual iterator operator+(size_t size);
+            virtual iterator& operator++();
+            virtual iterator operator++(value_type);
+            virtual iterator operator-(size_t size);
+            virtual iterator& operator--();
+            virtual iterator operator--(value_type);
             bool operator==(iterator const& other) const { return this->_cursor == other._cursor; }
             bool operator!=(iterator const& other) const { return this->_cursor != other._cursor; }
         };
@@ -122,32 +60,12 @@ namespace tk {
         public:
             explicit reverse_iterator(std::shared_ptr<node> cursor) : iterator<rit>(cursor) {}
             reverse_iterator(const iterator<rit>& base) : iterator<rit>(base) {}
-            iterator<rit> operator+(size_t size) override {
-                return iterator<rit>::operator-(size);
-            }
-            iterator<rit>& operator++() override {
-                *this = iterator<rit>::operator--();
-
-                return *this;
-            }
-            iterator<rit> operator++(typename iterator<rit>::value_type) override {
-                iterator<rit>::operator--(rit());
-
-                return *this;
-            }
-            iterator<rit> operator-(size_t size) override {
-                return iterator<rit>::operator+(size);
-            }
-            iterator<rit>& operator--() override {
-                *this = iterator<rit>::operator++();
-
-                return *this;
-            }
-            iterator<rit> operator--(typename iterator<rit>::value_type) override {
-                iterator<rit>::operator++(rit());
-
-                return *this;
-            }
+            iterator<rit> operator+(size_t size) override;
+            iterator<rit>& operator++() override;
+            iterator<rit> operator++(typename iterator<rit>::value_type) override;
+            iterator<rit> operator-(size_t size) override;
+            iterator<rit>& operator--() override;
+            iterator<rit> operator--(typename iterator<rit>::value_type) override;
         };
 
     public:
@@ -175,93 +93,13 @@ namespace tk {
         doubly_linked_list(size_t count) : doubly_linked_list(count, 0) {}
         doubly_linked_list() : doubly_linked_list(0) {}
         ~doubly_linked_list() = default;
-
-        void push_front(t const& value) {
-            auto new_node(std::make_shared<node>(value));
-
-            if (this->_front == nullptr) {
-                this->_front = new_node;
-                this->_back = new_node;
-
-            } else {
-                new_node->_next = this->_front;
-                this->_front->_prev = new_node;
-                this->_front = new_node;
-            }
-
-            this->_count++;
-        }
-        void pop_front() {
-            if (this->_front == nullptr) {
-                return;
-            }
-
-            if (this->_front == this->_back) {
-                this->_front = nullptr;
-                this->_back = nullptr;
-
-            } else {
-                this->_front = this->_front->_next;
-                this->_front->_prev = nullptr;
-            }
-
-            this->_count--;
-        }
-        void push_back(t const& value) {
-            auto new_node(std::make_shared<node>(value));
-
-            if (this->_front == nullptr) {
-                this->_front = new_node;
-                this->_back = new_node;
-
-            } else {
-                new_node->_prev = this->_back;
-                this->_back->_next = new_node;
-                this->_back = new_node;
-            }
-
-            this->_count++;
-        }
-        void pop_back() {
-            if (this->_back == nullptr) {
-                return;
-            }
-
-            if (this->_back == this->_front) {
-                this->_front = nullptr;
-                this->_back = nullptr;
-
-            } else {
-                this->_back = this->_back->_prev;
-                this->_back->_next = nullptr;
-            }
-
-            this->_count--;
-        }
-        void insert(const_iterator_type iterator, t const& value) {
-            if (iterator == this->cend()) {
-                throw std::out_of_range("Unable to insert node to doubly linked list. out of range of array.");
-            }
-
-            auto prev_node(iterator._cursor->_prev);
-            auto new_node(std::make_shared<node>(value));
-            new_node->_next = iterator._cursor;
-            iterator._cursor->_prev = new_node;
-            new_node->_prev = prev_node;
-            prev_node->_next = new_node;
-            this->_count++;
-        }
-        void remove(const_iterator_type iterator) {
-            if (iterator == this->cend()) {
-                throw std::out_of_range("Unable to remove node to doubly linked list. out of range of array.");
-            }
-
-            auto prev_node(iterator._cursor->_prev);
-            auto next_node(iterator._cursor->_next);
-            prev_node->_next = next_node;
-            next_node->_prev = prev_node;
-            this->_count--;
-        }
+        void push_front(t const& value);
+        void pop_front();
+        void push_back(t const& value);
+        void pop_back();
+        void insert(const_iterator_type iterator, t const& value);
+        void remove(const_iterator_type iterator);
+        void assign(iterator_type iterator, t const& value);
         size_t count() const { return this->_count; }
         t front() const { return this->_front ? this->_front->_value : t(); }
         t back() const { return this->_back ? this->_back->_value : t(); }

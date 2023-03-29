@@ -3,7 +3,7 @@
 //
 
 #include <gtest/gtest.h>
-#include <array.h>
+#include <dynamic_array.h>
 
 TEST(test_suite_array, dynamic_array_initialize_test) {
 

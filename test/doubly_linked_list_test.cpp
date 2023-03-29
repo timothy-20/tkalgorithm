@@ -106,6 +106,16 @@ TEST(test_suite_doubly_linked_list, remove_test) {
     EXPECT_EQ(list.back(), 3);
 }
 
+TEST(test_suite_doubly_linked_list, assign_test) {
+    tk::doubly_linked_list<int> list{1, 2, 3};
+
+    list.assign(list.begin(), 10);
+    list.assign(list.rbegin(), 10);
+    EXPECT_EQ(list.count(), 3);
+    EXPECT_EQ(list.front(), 10);
+    EXPECT_EQ(list.back(), 10);
+}
+
 TEST(test_suite_doubly_linked_list, iterator_test) {
     tk::doubly_linked_list<int> list{ 0, 1, 2 };
     int count(0);
