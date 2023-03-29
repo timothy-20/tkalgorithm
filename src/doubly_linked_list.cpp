@@ -114,9 +114,7 @@ namespace tk {
     template <typename t>
     template <typename rit>
     typename doubly_linked_list<t>::template iterator<rit> doubly_linked_list<t>::reverse_iterator<rit>::operator++(typename doubly_linked_list<t>::iterator<rit>::value_type) {
-        iterator<rit>::operator--(rit());
-
-        return *this;
+        return iterator<rit>::operator--(rit());
     }
 
     template <typename t>
@@ -136,9 +134,7 @@ namespace tk {
     template <typename t>
     template <typename rit>
     typename doubly_linked_list<t>::template iterator<rit> doubly_linked_list<t>::reverse_iterator<rit>::operator--(typename doubly_linked_list<t>::iterator<rit>::value_type) {
-        iterator<rit>::operator++(rit());
-
-        return *this;
+        return iterator<rit>::operator++(rit());
     }
 
     // doubly linked list implementation

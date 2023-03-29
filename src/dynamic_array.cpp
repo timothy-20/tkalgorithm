@@ -30,7 +30,7 @@ namespace tk {
     }
 
     template <typename t>
-    void dynamic_array<t>::add(t value) {
+    void dynamic_array<t>::push_back(t value) {
         if (this->_count == this->_capacity) {
             this->grow_capacity();
         }
@@ -54,7 +54,7 @@ namespace tk {
     }
 
     template <typename t>
-    void dynamic_array<t>::remove_last() {
+    void dynamic_array<t>::pop_back() {
         this->_list[this->_count] = t();
         this->_count--;
 

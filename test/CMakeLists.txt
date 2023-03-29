@@ -9,10 +9,11 @@ FetchContent_MakeAvailable(googletest)
 
 add_executable(
         tests
-        array_test.cpp
+        dynamic_array_test.cpp
         queue_test.cpp
         singly_linked_list_test.cpp
         doubly_linked_list_test.cpp
+        skip_list_test.cpp
 )
 target_compile_features(tests PRIVATE cxx_std_20)
 target_link_libraries(tests PRIVATE library GTest::gtest_main)

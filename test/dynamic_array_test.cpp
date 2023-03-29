@@ -5,26 +5,26 @@
 #include <gtest/gtest.h>
 #include <dynamic_array.h>
 
-TEST(test_suite_array, dynamic_array_initialize_test) {
+TEST(test_suite_dynamic_array, initialize_test) {
 
 }
 
-TEST(test_suite_array, dynamic_array_add_test) {
+TEST(test_suite_dynamic_array, add_test) {
     tk::dynamic_array<int> arr(5);
 
     for (int i(0); i < 5; i++) {
-        arr.add(i);
+        arr.push_back(i);
     }
 
     EXPECT_EQ(arr.count(), 5);
     EXPECT_EQ(arr[2], 2);
 }
 
-TEST(test_suite_array, dynamic_array_insert_test) {
+TEST(test_suite_dynamic_array, insert_test) {
     tk::dynamic_array<int> arr(10);
 
     for (int i(0); i < 5; i++) {
-        arr.add(i);
+        arr.push_back(i);
     }
 
     arr.insert(10, 2);
@@ -33,26 +33,26 @@ TEST(test_suite_array, dynamic_array_insert_test) {
     EXPECT_EQ(arr[5], 4);
 }
 
-TEST(test_suite_array, dynamic_array_remove_last_object_test) {
+TEST(test_suite_dynamic_array, remove_last_object_test) {
     tk::dynamic_array<int> arr(5);
 
     for (int i(0); i < 5; i++) {
-        arr.add(i);
+        arr.push_back(i);
     }
 
     for (int i(0); i < 3; i++) {
-        arr.remove_last();
+        arr.pop_back();
     }
 
     EXPECT_EQ(arr.count(), 2);
     EXPECT_EQ(arr[1], 1);
 }
 
-TEST(test_suite_array, dynamic_array_remove_test) {
+TEST(test_suite_dynamic_array, remove_test) {
     tk::dynamic_array<int> arr(5);
 
     for (int i(0); i < 5; i++) {
-        arr.add(i);
+        arr.push_back(i);
     }
 
     arr.remove(2);
@@ -64,38 +64,38 @@ TEST(test_suite_array, dynamic_array_remove_test) {
     EXPECT_ANY_THROW(arr[4]);
 }
 
-TEST(test_suite_array, dynamic_array_expand_test) {
+TEST(test_suite_dynamic_array, expand_test) {
     tk::dynamic_array<int> arr(3);
 
     for (int i(0); i < 4; ++i) {
-        arr.add(i);
+        arr.push_back(i);
     }
 
     EXPECT_EQ(arr.capacity(), 6);
 
     for (int i(0); i < 4; ++i) {
-        arr.add(i);
+        arr.push_back(i);
     }
 
     EXPECT_EQ(arr.capacity(), 12);
     EXPECT_EQ(arr[5], 1);
 }
 
-TEST(test_suite_array, dynamic_array_shrink_test) {
+TEST(test_suite_dynamic_array, shrink_test) {
     tk::dynamic_array<int> arr(12);
 
     for (int i(0); i < 12; i++) {
-        arr.add(i);
+        arr.push_back(i);
     }
 
     for (int i(0); i < 6; i++) {
-        arr.remove_last();
+        arr.pop_back();
     }
 
     EXPECT_EQ(arr.capacity(), 12);
 
     for (int i(0); i < 3; i++) {
-        arr.remove_last();
+        arr.pop_back();
     }
 
     EXPECT_EQ(arr.count(), 3);
