@@ -22,6 +22,7 @@ namespace tk {
 
     private:
         std::unique_ptr<node> _before_front;
+        node* _back;
         size_t _count;
 
     public:
@@ -52,28 +53,17 @@ namespace tk {
         using iterator_type = iterator<t>;
         using const_iterator_type = iterator<t const>;
 
-        singly_linked_list(std::initializer_list<t> list) :
-        _before_front(std::make_unique<node>()),
-        _count(0) {
-            for (auto iterator(std::rbegin(list)); iterator != std::rend(list); iterator++) {
-                this->push_front(*iterator);
-            }
-        }
-        singly_linked_list(size_t count, t const& value) :
-        _before_front(std::make_unique<node>()),
-        _count(0) {
-            for (int i(0); i < count; i++) {
-                this->push_front(value);
-            }
-        }
+        singly_linked_list(std::initializer_list<t> list);
+        singly_linked_list(size_t count, t const& value);
         singly_linked_list(size_t count) : singly_linked_list(count, 0) {}
         singly_linked_list() : singly_linked_list(0) {}
         ~singly_linked_list() = default;
         void push_front(t const& value);
         void pop_front();
-        void assign(iterator_type iterator, t const& value);
         void insert_after(const_iterator_type iterator, t const& value);
         void remove_after(const_iterator_type iterator);
+        void assign(iterator_type iterator, t const& value);
+        void resize(size_t size, t const& value = t());
         t front() const { return this->_before_front->_next ? this->_before_front->_next->_value : t(); }
         size_t count() const { return this->_count; }
         const_iterator_type before_begin() const { return iterator<t const>(this->_before_front.get()); }

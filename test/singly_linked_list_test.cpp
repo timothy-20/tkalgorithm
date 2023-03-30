@@ -87,21 +87,60 @@ TEST(test_suite_singly_linked_list, insert_after_test) {
 }
 
 TEST(test_suite_singly_linked_list, remove_after_test) {
-    tk::singly_linked_list<int> list;
+    tk::singly_linked_list<int> list{ 2, 1 };
 
-    list.push_front(1);
-    list.push_front(2);
     list.remove_after(list.cbegin());
     EXPECT_EQ(list.front(), 2);
 }
 
 TEST(test_suite_singly_linked_list, before_front_test) {
-    tk::singly_linked_list<int> list;
+    tk::singly_linked_list<int> list{ 1, 2 };
 
-    list.push_front(2);
-    list.push_front(1);
     list.insert_after(list.before_begin(), 0);
     EXPECT_EQ(list.front(), 0);
+}
+
+// 기본적인 list의 크기 증가 및 감소에 대한 테스트
+TEST(test_suite_singly_linked_list, resize_test_001) {
+    tk::singly_linked_list<int> list{ 1, 2, 3 };
+
+    list.resize(5);
+
+    int count1(0);
+
+    for (auto const& value : list) {
+        count1++;
+
+        if (count1 > 3) {
+            EXPECT_EQ(value, 0);
+
+        } else {
+            EXPECT_EQ(value, count1);
+        }
+    }
+
+    EXPECT_EQ(count1, 5);
+
+    int count2(0);
+
+    list.resize(2);
+
+    for (auto const& value : list) {
+        count2++;
+
+        EXPECT_EQ(value, count2);
+    }
+
+    EXPECT_EQ(count2, 2);
+}
+
+// list의 크기 증가 시, list의 count 및 대비 증가 크기를 비교하여 최적화된 resize 동작을 수행하는지에 대한 테스트
+TEST(test_suite_singly_linked_list, resize_test_002) {
+    tk::singly_linked_list<int> list { 1, 2 };
+
+    list.resize(5);
+
+    list.resize(6);
 }
 
 TEST(test_suite_singly_linked_list, iterator_test_001) {
