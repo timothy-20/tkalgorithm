@@ -1,5 +1,10 @@
 # tkalgorithm
-직접 구현한 자료구조 및 알고리즘을 cmake를 사용해 정적 라이브러리로 구성해본 프로젝트입니다.
+cpp를 사용하여 직접 구현한 자료구조 및 알고리즘을 cmake 프로젝트로 구성하였습니다.
+
+google test 및 google benchmark 외부 라이브러리를 이용하여 단위 테스트 및 벤치마크를 구성하였습니다.
+[TDD 방법론](https://ko.wikipedia.org/wiki/%ED%85%8C%EC%8A%A4%ED%8A%B8_%EC%A3%BC%EB%8F%84_%EA%B0%9C%EB%B0%9C)을 지향하고 있으며, 이를 통해 90% 이상의 테스트 커버리지를 목표로 삼고 있습니다.
+
+doxygen 외부 라이브러리를 이용하여 문서화를 진행할 예정입니다.
 
 ## data structure
 ### singly_linked_list
