@@ -117,23 +117,28 @@ TEST(test_suite_doubly_linked_list, assign_test) {
 }
 
 TEST(test_suite_doubly_linked_list, iterator_test) {
-    tk::doubly_linked_list<int> list{ 0, 1, 2 };
-    int count(0);
+    tk::doubly_linked_list<int> list{ 0, 1, 2, 3, 4 };
+    int count1(0);
+    int count2(4);
 
     for (auto const& value : list) {
-        EXPECT_EQ(value, count);
+        EXPECT_EQ(value, count1);
 
-        count++;
+        count1++;
     }
-}
 
-TEST(test_suite_doubly_linked_list, reverse_iterator_test) {
-    tk::doubly_linked_list<int> list { 2, 1, 0 };
-    int count(0);
+    for (auto i(list.crbegin()); i != list.crend(); i++) {
+        EXPECT_EQ(*i, count2);
 
-    for (auto iterator(list.crbegin()); iterator != list.crend(); iterator++) {
-        EXPECT_EQ(*iterator, count);
-
-        count++;
+        count2--;
     }
+
+    EXPECT_EQ(*(++list.begin()), 1);
+    EXPECT_EQ(*(--list.end()), 4);
+//    EXPECT_EQ(*(++list.rbegin()), 3);
+//    EXPECT_EQ(*(--list.rend()), 0);
+//    EXPECT_ANY_THROW(*(list.end()));
+//    EXPECT_ANY_THROW(*(++list.end()));
+//    EXPECT_ANY_THROW(*(list.rend()));
+//    EXPECT_ANY_THROW(*(++list.rend()));
 }

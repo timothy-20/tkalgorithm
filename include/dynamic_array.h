@@ -32,34 +32,37 @@ namespace tk {
             _index(index) {}
             reference operator*() const;
             pointer operator->() const;
-            virtual iterator operator+(difference_type n);
+            virtual iterator operator+(difference_type n) const;
             virtual iterator& operator+=(difference_type n);
             virtual iterator& operator++();
             virtual iterator operator++(value_type);
-            virtual iterator operator-(difference_type n);
+            virtual iterator operator-(difference_type n) const;
             virtual iterator& operator-=(difference_type n);
             virtual iterator& operator--();
             virtual iterator operator--(value_type);
+            virtual difference_type operator-(iterator const& other) const;
             bool operator==(iterator const& other) const { return this->_list == other._list && this->_index == other._index; }
             bool operator!=(iterator const& other) const { return this->_list != other._list || this->_index != other._index; }
             bool operator<(iterator const& other) const { return this->_list == other._list && this->_index < other._index; }
             bool operator<=(iterator const& other) const { return this->_list == other._list && this->_index <= other._index; }
             bool operator>(iterator const& other) const { return this->_list == other._list && this->_index > other._index; }
             bool operator>=(iterator const& other) const { return this->_list == other._list && this->_index >= other._index; }
+            int64_t index() const { return this->_index; }
         };
 
         template <typename rit>
         class reverse_iterator : public iterator<rit> {
         public:
             reverse_iterator(iterator<rit> const& other) : iterator<rit>(other) {}
-            iterator<rit> operator+(iterator<rit>::difference_type n) override;
-            iterator<rit>& operator+=(iterator<rit>::difference_type n) override;
+            iterator<rit> operator+(typename iterator<rit>::difference_type n) const override;
+            iterator<rit>& operator+=(typename iterator<rit>::difference_type n) override;
             iterator<rit>& operator++() override;
             iterator<rit> operator++(typename iterator<rit>::value_type) override;
-            iterator<rit> operator-(iterator<rit>::difference_type n) override;
-            iterator<rit>& operator-=(iterator<rit>::difference_type n) override;
+            iterator<rit> operator-(typename iterator<rit>::difference_type n) const override;
+            iterator<rit>& operator-=(typename iterator<rit>::difference_type n) override;
             iterator<rit>& operator--() override;
             iterator<rit> operator--(typename iterator<rit>::value_type) override;
+            typename iterator<rit>::difference_type operator-(iterator<rit> const& other) const override;
         };
 
     public:
@@ -68,23 +71,9 @@ namespace tk {
         using reverse_iterator_type = reverse_iterator<t>;
         using const_reverse_iterator_type = reverse_iterator<t const>;
 
-        dynamic_array(std::initializer_list<t> list) :
-        _capacity(list.size() > 0 ? list.size() * 2 : 10),
-        _count(0),
-        _list(new t[this->_capacity]) {
-            for (auto const& value : list) {
-                this->push_back(value);
-            }
-        }
-        dynamic_array(size_t count, const t& value) :
-        _capacity(count > 0 ? count * 2 : 10),
-        _count(0),
-        _list(new t[this->_capacity]) {
-            for (int i(0); i < count; i++) {
-                this->push_back(value);
-            }
-        }
-        dynamic_array(size_t count) : dynamic_array(count, 0) {}
+        dynamic_array(std::initializer_list<t> list);
+        explicit dynamic_array(size_t count, const t& value);
+        explicit dynamic_array(size_t count) : dynamic_array(count, 0) {}
         dynamic_array() : dynamic_array(0) {}
         ~dynamic_array() { delete[] this->_list; }
         void push_back(t value);
@@ -101,9 +90,9 @@ namespace tk {
         const_iterator_type cbegin() { return iterator<t const>(this); }
         reverse_iterator_type rbegin() { return iterator<t>(this, this->_count - 1); }
         const_reverse_iterator_type crbegin() { return iterator<t const>(this, this->_count - 1); }
-        iterator_type end() { return iterator<t>(nullptr, this->_count); }
-        const_iterator_type cend() { return iterator<t const>(nullptr, this->_count); }
-        reverse_iterator_type rend() { return iterator<t>(nullptr, -1); }
-        const_reverse_iterator_type crend() { return iterator<t const>(nullptr, -1); }
+        iterator_type end() { return iterator<t>(this, this->_count); }
+        const_iterator_type cend() { return iterator<t const>(this, this->_count); }
+        reverse_iterator_type rend() { return iterator<t>(this, -1); }
+        const_reverse_iterator_type crend() { return iterator<t const>(this, -1); }
     };
 }

@@ -14,17 +14,19 @@ namespace tk {
             std::shared_ptr<node> _prev;
             std::shared_ptr<node> _next;
             t _value;
+            bool _is_enable;
 
-            explicit node(t const& value) :
+            explicit node(t const& value, bool is_enable) :
             _prev(nullptr),
             _next(nullptr),
-            _value(value) {}
-            node() : node(t()) {}
+            _value(value),
+            _is_enable(is_enable) {}
+            node() : node(t(), true) {}
         };
 
     private:
-        std::shared_ptr<node> _front;
-        std::shared_ptr<node> _back;
+        std::shared_ptr<node> _before_front;
+        std::shared_ptr<node> _after_back;
         size_t _count;
 
     public:
@@ -70,16 +72,16 @@ namespace tk {
         using const_reverse_iterator_type = reverse_iterator<t const>;
 
         doubly_linked_list(std::initializer_list<t> list) :
-        _front(nullptr),
-        _back(nullptr),
+        _before_front(std::make_shared<node>(t(), false)),
+        _after_back(std::make_shared<node>(t(), false)),
         _count(0) {
             for (auto const& value : list) {
                 this->push_back(value);
             }
         }
         doubly_linked_list(size_t count, t const& value) :
-        _front(nullptr),
-        _back(nullptr),
+        _before_front(std::make_shared<node>(t(), false)),
+        _after_back(std::make_shared<node>(t(), false)),
         _count(0) {
             for (int i(0); i < count; i++) {
                 this->push_back(value);
@@ -96,15 +98,15 @@ namespace tk {
         void remove(const_iterator_type iterator);
         void assign(iterator_type iterator, t const& value);
         size_t count() const { return this->_count; }
-        t front() const { return this->_front ? this->_front->_value : t(); }
-        t back() const { return this->_back ? this->_back->_value : t(); }
-        iterator_type begin() const { return iterator<t>(this->_front); }
-        const_iterator_type cbegin() const { return iterator<t const>(this->_front); }
-        iterator_type end() const { return iterator<t>(nullptr); }
-        const_iterator_type cend() const { return iterator<t const>(nullptr); }
-        reverse_iterator_type rbegin() const { return iterator<t>(this->_back); }
-        const_reverse_iterator_type crbegin() const { return iterator<t const>(this->_back); }
-        reverse_iterator_type rend() const { return iterator<t>(nullptr); }
-        const_reverse_iterator_type crend() const { return iterator<t const>(nullptr); }
+        t front() const { return this->_before_front->_next ? this->_before_front->_next->_value : t(); }
+        t back() const { return this->_after_back->_prev ? this->_after_back->_prev->_value : t(); }
+        iterator_type begin() const { return iterator<t>(this->_before_front->_next); }
+        const_iterator_type cbegin() const { return iterator<t const>(this->_before_front->_next); }
+        reverse_iterator_type rbegin() const { return iterator<t>(this->_after_back->_prev); }
+        const_reverse_iterator_type crbegin() const { return iterator<t const>(this->_after_back->_prev); }
+        iterator_type end() const { return iterator<t>(this->_after_back); }
+        const_iterator_type cend() const { return iterator<t const>(this->_after_back); }
+        reverse_iterator_type rend() const { return iterator<t>(this->_before_front); }
+        const_reverse_iterator_type crend() const { return iterator<t const>(this->_before_front); }
     };
 }
