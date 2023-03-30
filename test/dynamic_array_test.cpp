@@ -125,4 +125,9 @@ TEST(test_suite_dynamic_array, iterator_test) {
     EXPECT_EQ(*(list.rbegin() + 1), 3);
     EXPECT_EQ(*(list.end() - 1), 4);
     EXPECT_EQ(*(list.rend() - 1), 0);
+    EXPECT_ANY_THROW(*list.end());
+    EXPECT_ANY_THROW(*(++list.end()));
+    EXPECT_ANY_THROW(*list.rend());
+    EXPECT_ANY_THROW(*(++list.rend()));
+
 }

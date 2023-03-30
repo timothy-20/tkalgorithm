@@ -97,6 +97,7 @@ namespace tk {
         void insert(const_iterator_type iterator, t const& value);
         void remove(const_iterator_type iterator);
         void assign(iterator_type iterator, t const& value);
+        void resize(size_t size, t const& value = t());
         size_t count() const { return this->_count; }
         t front() const { return this->_before_front->_next ? this->_before_front->_next->_value : t(); }
         t back() const { return this->_after_back->_prev ? this->_after_back->_prev->_value : t(); }

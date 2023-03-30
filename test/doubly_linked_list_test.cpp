@@ -107,13 +107,40 @@ TEST(test_suite_doubly_linked_list, remove_test) {
 }
 
 TEST(test_suite_doubly_linked_list, assign_test) {
-    tk::doubly_linked_list<int> list{1, 2, 3};
+    tk::doubly_linked_list<int> list{ 1, 2, 3 };
 
     list.assign(list.begin(), 10);
     list.assign(list.rbegin(), 10);
     EXPECT_EQ(list.count(), 3);
     EXPECT_EQ(list.front(), 10);
     EXPECT_EQ(list.back(), 10);
+}
+
+TEST(test_suite_doubly_linked_list, resize_test) {
+    tk::doubly_linked_list<int> list{ 1, 2, 3 };
+
+    list.resize(6, 10);
+
+    int count1(0);
+
+    for (auto i(++(++(++(list.cbegin())))); i != list.cend(); i++) {
+        count1++;
+
+        EXPECT_EQ(*i, 10);
+    }
+
+    EXPECT_EQ(count1, 3);
+    list.resize(2);
+
+    int count2(0);
+
+    for (auto const& value : list) {
+        count2++;
+
+        EXPECT_EQ(value, count2);
+    }
+
+    EXPECT_EQ(count2, 2);
 }
 
 TEST(test_suite_doubly_linked_list, iterator_test) {
@@ -135,10 +162,10 @@ TEST(test_suite_doubly_linked_list, iterator_test) {
 
     EXPECT_EQ(*(++list.begin()), 1);
     EXPECT_EQ(*(--list.end()), 4);
-//    EXPECT_EQ(*(++list.rbegin()), 3);
-//    EXPECT_EQ(*(--list.rend()), 0);
-//    EXPECT_ANY_THROW(*(list.end()));
-//    EXPECT_ANY_THROW(*(++list.end()));
-//    EXPECT_ANY_THROW(*(list.rend()));
-//    EXPECT_ANY_THROW(*(++list.rend()));
+    EXPECT_EQ(*(++list.rbegin()), 3);
+    EXPECT_EQ(*(--list.rend()), 0);
+    EXPECT_ANY_THROW(*list.end());
+    EXPECT_ANY_THROW(*(++list.end()));
+    EXPECT_ANY_THROW(*list.rend());
+    EXPECT_ANY_THROW(*(++list.rend()));
 }

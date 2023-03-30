@@ -29,7 +29,7 @@ namespace tk {
     template <typename t>
     template <typename it>
     typename doubly_linked_list<t>::template iterator<it>& doubly_linked_list<t>::iterator<it>::operator++() {
-        if (this->_cursor && this->_cursor->_is_enable) {
+        if (this->_cursor) {
             this->_cursor = this->_cursor->_next;
         }
 
@@ -41,7 +41,7 @@ namespace tk {
     typename doubly_linked_list<t>::template iterator<it> doubly_linked_list<t>::iterator<it>::operator++(it) {
         auto temp_iterator(*this);
 
-        if (this->_cursor && this->_cursor->_is_enable) {
+        if (this->_cursor) {
             this->_cursor = this->_cursor->_next;
         }
 
@@ -51,7 +51,7 @@ namespace tk {
     template <typename t>
     template <typename it>
     typename doubly_linked_list<t>::template iterator<it>& doubly_linked_list<t>::iterator<it>::operator--() {
-        if (this->_cursor && this->_cursor->_is_enable) {
+        if (this->_cursor) {
             this->_cursor = this->_cursor->_prev;
         }
 
@@ -63,7 +63,7 @@ namespace tk {
     typename doubly_linked_list<t>::template iterator<it> doubly_linked_list<t>::iterator<it>::operator--(it) {
         auto temp_iterator(*this);
 
-        if (this->_cursor && this->_cursor->_is_enable) {
+        if (this->_cursor) {
             this->_cursor = this->_cursor->_prev;
         }
 
@@ -211,6 +211,22 @@ namespace tk {
         }
 
         *iterator = value;
+    }
+
+    template <typename t>
+    void doubly_linked_list<t>::resize(size_t size, const t& value) {
+        if (size > this->_count) {
+            for (int i(this->_count); i < size; i++) {
+                this->push_back(value);
+            }
+
+        } else if (size < this->_count) {
+            for (int i(this->_count); i > size; i--) {
+                this->pop_back();
+            }
+        }
+
+        this->_count = size;
     }
 
     template class doubly_linked_list<int>::iterator<int>;
