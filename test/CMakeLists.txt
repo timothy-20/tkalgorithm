@@ -4,7 +4,7 @@ FetchContent_Declare(
         GIT_TAG v1.13.0
 )
 
-set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
+set(GTEST_FORCE_SHARED_CRT ON CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(googletest)
 
 add_executable(

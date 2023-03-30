@@ -34,6 +34,7 @@ FetchContent_MakeAvailable(fmtlib)
 
 add_subdirectory(src)
 add_subdirectory(app)
+add_subdirectory(benchmark)
 
 if ((CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME OR MODERN_CMAKE_BUILD_TESTING) AND BUILD_TESTING)
     add_subdirectory(test)

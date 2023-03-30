@@ -9,7 +9,7 @@ set(
         doubly_linked_list.cpp
         dynamic_array.cpp
         queue.cpp
-        ../include/utility.h)
+)
 
 add_library(library SHARED ${SOURCE})
 target_include_directories(library PUBLIC ${PROJECT_SOURCE_DIR}/include)
