@@ -157,7 +157,7 @@ namespace tk {
         } else if (size < this->_count) {
             auto current(this->begin());
 
-            for (int i(0); i < size; i++) {
+            for (int i(1); i < size; i++) {
                 current++;
             }
 

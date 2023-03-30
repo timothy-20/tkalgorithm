@@ -121,9 +121,9 @@ TEST(test_suite_singly_linked_list, resize_test) {
 
     EXPECT_EQ(count1, 5);
 
-    int count2(0);
-
     list.resize(2);
+
+    int count2(0);
 
     for (auto const& value : list) {
         count2++;
