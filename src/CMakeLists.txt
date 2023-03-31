@@ -9,6 +9,7 @@ set(
         doubly_linked_list.cpp
         dynamic_array.cpp
         queue.cpp
+        skip_list.cpp
 )
 
 add_library(library SHARED ${SOURCE})
