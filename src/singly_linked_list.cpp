@@ -134,25 +134,14 @@ namespace tk {
     template <typename t>
     void singly_linked_list<t>::resize(size_t size, t const& value) {
         if (size > this->_count) {
-            size_t distance(size > this->_count ? size - this->_count : this->_count - size);
-            singly_linked_list new_list(distance, value);
+            node* temp(this->_back);
 
-            if (this->_count > distance) {
-                this->_back->_next = std::move(new_list._before_front->_next);
-                this->_back = new_list._back;
-
-            } else {
-                auto current(this->begin());
-                iterator_type prev(nullptr);
-
-                do {
-                    current++;
-                    prev = current;
-
-                } while (++prev != this->end());
-
-                current._cursor->_next = std::move(new_list._before_front->_next);
+            for (int i(0); i < size - this->_count; i++) {
+                temp->_next = std::make_unique<node>(value);
+                temp = temp->_next.get();
             }
+
+            this->_back = temp;
 
         } else if (size < this->_count) {
             auto current(this->begin());
@@ -162,6 +151,7 @@ namespace tk {
             }
 
             current._cursor->_next = nullptr;
+            this->_back = current._cursor;
         }
 
         this->_count = size;

@@ -100,8 +100,7 @@ TEST(test_suite_singly_linked_list, before_front_test) {
     EXPECT_EQ(list.front(), 0);
 }
 
-// 기본적인 list의 크기 증가 및 감소에 대한 테스트
-TEST(test_suite_singly_linked_list, resize_test) {
+TEST(test_suite_singly_linked_list, resize_test_001) {
     tk::singly_linked_list<int> list{ 1, 2, 3 };
 
     list.resize(5);
@@ -132,6 +131,22 @@ TEST(test_suite_singly_linked_list, resize_test) {
     }
 
     EXPECT_EQ(count2, 2);
+}
+
+TEST(test_suite_singly_linked_list, resize_test_002) {
+    tk::singly_linked_list<int> list(1, 5);
+
+    list.resize(10, 5);
+
+    int count(0);
+
+    for (auto const& value : list) {
+        count++;
+
+        EXPECT_EQ(value, 5);
+    }
+
+    EXPECT_EQ(count, 10);
 }
 
 TEST(test_suite_singly_linked_list, iterator_test_001) {
