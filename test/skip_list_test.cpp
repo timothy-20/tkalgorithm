@@ -6,5 +6,8 @@
 #include <skip_list.h>
 
 TEST(test_suite_skip_list, initializer_test) {
+    EXPECT_NO_THROW(tk::skip_list<int> list);
+}
 
+TEST(test_suite_skip_list, insert_test) {
 }
