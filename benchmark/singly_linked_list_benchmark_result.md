@@ -58,7 +58,7 @@ template <typename t>
  singly_linked_list<t>::singly_linked_list(size_t count, const t &value) :
  _before_front(std::make_unique<node>()),
  _back(nullptr),
- _count(0) {
+ _level(0) {
      for (int i(0); i < count; i++) {
          if (i == 0) {
              this->_before_front->_next = std::make_unique<node>(value);
@@ -69,7 +69,7 @@ template <typename t>
              this->_back = this->_back->_next.get();
          }
 
-         this->_count++;
+         this->_level++;
      }
  }
 ```
@@ -113,13 +113,13 @@ private:
 private:
     node* _before_front;
     node* _back;
-    size_t _count;
+    size_t _level;
 
 public:
     explicit dummy(size_t n, t const& value = t()) :
     _before_front(new node()),
     _back(nullptr),
-    _count(0) {
+    _level(0) {
         for (int i(0); i < n; i++) {
             if (this->_before_front->_next == nullptr) {
                 this->_before_front->_next = std::move(new node(value));
@@ -131,7 +131,7 @@ public:
                 this->_before_front->_next = new_node;
             }
 
-            this->_count++;
+            this->_level++;
         }
     }
     ~dummy() {
