@@ -26,7 +26,7 @@ namespace tk {
         size_t _current_level;
         size_t _count;
         float _percentage;
-        node* _head;
+        node* _front;
 
     private:
         uint32_t get_level() const;
@@ -38,7 +38,7 @@ namespace tk {
         _percentage(percentage), // 높은 레벨이 나올 확률
         _count(0), // 노드의 갯수
         _current_level(0), // 현재 노드의 최대 레벨
-        _head(new node(max_level)) {}
+        _front(new node(max_level)) {}
         skip_list(size_t max_level) : skip_list(max_level, 0.5) {}
         bool is_contain(t const& value) const;
         void insert(t const& value);

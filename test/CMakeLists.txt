@@ -15,6 +15,8 @@ add_executable(
         skip_list_test.cpp
         queue_test.cpp
         utility_test.cpp
+        binary_search_tree_test.cpp
+        xor_linked_list_test.cpp
 )
 target_compile_features(tests PRIVATE cxx_std_20)
 target_link_libraries(tests PRIVATE library GTest::gtest_main)

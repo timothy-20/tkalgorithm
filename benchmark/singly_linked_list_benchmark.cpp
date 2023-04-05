@@ -59,7 +59,7 @@ public:
 
             } else {
                 auto new_node(new node(value));
-                new_node->_next = this->_before_front->_next;
+                new_node->_fork = this->_before_front->_next;
                 this->_before_front->_next = new_node;
             }
 
@@ -70,7 +70,7 @@ public:
         auto current(this->_before_front);
 
         while (current) {
-            auto temp(current->_next);
+            auto temp(current->_fork);
             delete current;
             current = temp;
         }

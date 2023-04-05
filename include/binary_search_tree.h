@@ -5,12 +5,17 @@
 #pragma once
 #include <iostream>
 
-template <typename t>
-class binary_search_tree {
-private:
+namespace tk {
+    template <typename t>
+    class binary_search_tree {
+    private:
 
 
-private:
+    private:
 
-public:
-};
+    public:
+
+    };
+
+    template class binary_search_tree<int>;
+}

@@ -22,7 +22,7 @@ namespace tk {
     template <typename t>
     bool skip_list<t>::is_contain(t const& value, std::vector<node*>& prev_nodes, skip_list<t>::node*& target_node) const {
         prev_nodes = std::vector<node*>(this->_max_level+1, nullptr);
-        target_node = this->_head;
+        target_node = this->_front;
 
         for (int i(this->_current_level); i >= 0; i--) { // 현재의 최대 레벨(express lane)부터 0번 레벨(normal lane)까지 순회
             while (target_node->_next[i] && target_node->_next[i]->_value < value) { // 노드의 값보다 크거나 같은 값인 노드를 발견할 때까지 순회
@@ -93,7 +93,7 @@ namespace tk {
             }
         }
 
-        while (this->_current_level > 0 && this->_head->_next[this->_current_level] == nullptr) { // 헤더의 최대 레벨부터 순회하면서 비어있는지 확인
+        while (this->_current_level > 0 && this->_front->_next[this->_current_level] == nullptr) { // 헤더의 최대 레벨부터 순회하면서 비어있는지 확인
             this->_current_level--;
         }
 

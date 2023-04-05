@@ -61,12 +61,12 @@ template <typename t>
  _level(0) {
      for (int i(0); i < count; i++) {
          if (i == 0) {
-             this->_before_front->_next = std::make_unique<node>(value);
-             this->_back = this->_before_front->_next.get();
+             this->_before_front->_fork = std::make_unique<node>(value);
+             this->_back = this->_before_front->_fork.get();
 
          } else {
-             this->_back->_next = std::make_unique<node>(value);
-             this->_back = this->_back->_next.get();
+             this->_back->_fork = std::make_unique<node>(value);
+             this->_back = this->_back->_fork.get();
          }
 
          this->_level++;
@@ -103,11 +103,11 @@ class dummy {
 private:
     struct node {
         t _value;
-        node* _next;
+        node* _fork;
 
         explicit node(t const& value = t()) :
         _value(value),
-        _next(nullptr) {}
+        _fork(nullptr) {}
     };
 
 private:
@@ -121,14 +121,14 @@ public:
     _back(nullptr),
     _level(0) {
         for (int i(0); i < n; i++) {
-            if (this->_before_front->_next == nullptr) {
-                this->_before_front->_next = std::move(new node(value));
-                this->_back = this->_before_front->_next;
+            if (this->_before_front->_fork == nullptr) {
+                this->_before_front->_fork = std::move(new node(value));
+                this->_back = this->_before_front->_fork;
 
             } else {
                 auto new_node(new node(value));
-                new_node->_next = this->_before_front->_next;
-                this->_before_front->_next = new_node;
+                new_node->_fork = this->_before_front->_fork;
+                this->_before_front->_fork = new_node;
             }
 
             this->_level++;
@@ -138,7 +138,7 @@ public:
         auto current(this->_before_front);
 
         while (current) {
-            auto temp(current->_next);
+            auto temp(current->_fork);
             delete current;
             current = temp;
         }
