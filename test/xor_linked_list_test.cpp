@@ -37,4 +37,23 @@ TEST(test_suite_xor_linked_list, pop_front_test) {
 
     EXPECT_EQ(list.front(), 0);
     EXPECT_EQ(list.count(), 0);
+
+    list.pop_front(); // 빈 list에 대한 pop 시도에 대한 테스트
+}
+
+TEST(test_suite_xor_linked_list, push_back_test) {
+    tk::xor_linked_list<int> list;
+
+    list.push_back(1);
+    list.push_back(2);
+
+    EXPECT_EQ(list.count(), 2);
+    EXPECT_EQ(list.front(), 1);
+    EXPECT_EQ(list.back(), 2);
+}
+
+TEST(test_suite_xor_linked_list, pop_back_test) {
+    tk::xor_linked_list<int> list;
+
+
 }
