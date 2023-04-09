@@ -10,6 +10,7 @@ set(
         dynamic_array.cpp
         queue.cpp
         skip_list.cpp
+        xor_linked_list.cpp
 )
 
 add_library(library SHARED ${SOURCE})
