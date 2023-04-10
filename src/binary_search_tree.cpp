@@ -51,6 +51,18 @@ namespace tk {
     }
 
     template <typename t>
+    typename binary_search_tree<t>::node* binary_search_tree<t>::search_min(typename binary_search_tree<t>::node* target_node) {
+        if (target_node == nullptr) {
+            return nullptr;
+        }
+
+        node* parent;
+        auto current(target_node);
+
+        return parent;
+    }
+
+    template <typename t>
     void binary_search_tree<t>::insert(t const& value) {
         auto new_node(new node(value));
 
@@ -61,7 +73,7 @@ namespace tk {
         }
 
         this->search(value, [&new_node](node* parent, node* current, bool is_left) {
-            if (parent && current == nullptr) {
+            if (parent && current == nullptr) { // leaf 노드에 도달한 경우
                 if (is_left) {
                     parent->_left = new_node;
 
@@ -69,7 +81,7 @@ namespace tk {
                     parent->_right = new_node;
                 }
 
-            } else {
+            } else { // 동일한 값을 가진 노드를 발견한 경우
                 delete new_node;
             }
         });
@@ -81,11 +93,31 @@ namespace tk {
             return;
         }
 
-        this->search(value, [](node* parent, node* current, bool is_left) {
+        this->search(value, [this](node* parent, node* current, bool is_left) {
             if (parent && current) {
-                if (is_left) {
+                if (current->_left == nullptr && current->_right == nullptr) { // 대상 노드가 leaf 노드일 경우
+                    if (is_left) {
+                        parent->_left = nullptr;
 
-                } else {
+                    } else {
+                        parent->_right = nullptr;
+                    }
+
+                    delete current;
+
+                } else if (current->_left == nullptr || current->_right == nullptr) { // 대상 노드의 자식이 1개만 있는 경우
+                    auto child(current->_left ? : current->_right);
+
+                    if (is_left) {
+                        parent->_left = child;
+
+                    } else {
+                        parent->_right = child;
+                    }
+
+                    delete current;
+
+                } else { // 대상 노드의 자식 노드가 둘 다 있는 경우
 
                 }
             }
