@@ -6,7 +6,7 @@
 
 namespace tk {
     template <typename t>
-    xor_linked_list<t>::node* xor_linked_list<t>::get_node_with_xor(node const* lhs, node const* rhs) const { // prev와 next에 해당하는 노드를 받음
+    typename xor_linked_list<t>::node* xor_linked_list<t>::get_node_with_xor(node const* lhs, node const* rhs) const { // prev와 next에 해당하는 노드를 받음
         return reinterpret_cast<node*>(reinterpret_cast<uintptr_t>(lhs) ^ reinterpret_cast<uintptr_t>(rhs)); // uintptr 타입으로 xor 연산 포인터 값으로 형 변환
     }
 
@@ -112,4 +112,6 @@ namespace tk {
 
         return front->_value;
     }
+
+    template class xor_linked_list<int>;
 }

@@ -11,7 +11,7 @@ set(
         queue.cpp
         skip_list.cpp
         xor_linked_list.cpp
-)
+        binary_search_tree.cpp)
 
 add_library(library SHARED ${SOURCE})
 target_include_directories(library PUBLIC ${PROJECT_SOURCE_DIR}/include)

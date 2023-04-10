@@ -41,6 +41,4 @@ namespace tk {
         t back() const { return this->_after_back->_fork != this->_before_front ? this->_after_back->_fork->_value : t(); }
         size_t count() const { return this->_count; };
     };
-
-    template class xor_linked_list<int>;
 }
