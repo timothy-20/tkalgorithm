@@ -32,7 +32,7 @@ namespace tk {
         explicit binary_search_tree(size_t size, t const& value);
         explicit binary_search_tree(size_t size);
         ~binary_search_tree();
-        void search(t const& value, std::function<void(node* parent, node* current, bool is_left, bool is_right)> completion);
+        void search(t const& value, std::function<void(node* parent, node* current, bool is_left)> completion);
         void insert(t const& value);
         void remove(t const& value);
     };
