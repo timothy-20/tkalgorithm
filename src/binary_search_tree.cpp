@@ -59,6 +59,11 @@ namespace tk {
         node* parent;
         auto current(target_node);
 
+        while (current) {
+            parent = current;
+            current = current->_left;
+        }
+
         return parent;
     }
 
@@ -118,6 +123,14 @@ namespace tk {
                     delete current;
 
                 } else { // 대상 노드의 자식 노드가 둘 다 있는 경우
+                    auto min(this->search_min(current->_right)); // 오른쪽 노드의 자식 중에 최소 값을 가진 노드 탐색(왼쪽 값이 없는 노드)
+
+                    if (current->_right == min) { // 최소 노드가 인접해 있는 경우
+                        current = min;
+
+                    } else {
+
+                    }
 
                 }
             }
