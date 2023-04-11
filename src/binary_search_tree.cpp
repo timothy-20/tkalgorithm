@@ -12,12 +12,16 @@ namespace tk {
 
     template <typename t>
     binary_search_tree<t>::binary_search_tree(std::initializer_list<t> list) : binary_search_tree() {
-
+        for (auto const& value : list) {
+            this->insert(value);
+        }
     }
 
     template <typename t>
     binary_search_tree<t>::binary_search_tree(size_t size, t const& value) : binary_search_tree() {
-
+        for (int i(0); i < size; i++) {
+            this->insert(value);
+        }
     }
 
     template <typename t>
@@ -25,7 +29,9 @@ namespace tk {
 
     template <typename t>
     binary_search_tree<t>::~binary_search_tree() {
-
+        this->traversal_postorder(this->_root, [](node* target) {
+            delete target;
+        });
     }
 
     template <typename t>
@@ -51,20 +57,36 @@ namespace tk {
     }
 
     template <typename t>
-    typename binary_search_tree<t>::node* binary_search_tree<t>::search_min(typename binary_search_tree<t>::node* target_node) {
-        if (target_node == nullptr) {
-            return nullptr;
+    void binary_search_tree<t>::traversal_preorder(typename binary_search_tree<t>::node* root, std::function<void(node*)> completion) {
+        if (root == nullptr) {
+            return;
         }
 
-        node* parent;
-        auto current(target_node);
+        completion(root);
+        this->traversal_preorder(root->_left, completion);
+        this->traversal_preorder(root->_right, completion);
+    }
 
-        while (current) {
-            parent = current;
-            current = current->_left;
+    template <typename t>
+    void binary_search_tree<t>::traversal_inorder(typename binary_search_tree<t>::node* root, std::function<void(node*)> completion) {
+        if (root == nullptr) {
+            return;
         }
 
-        return parent;
+        this->traversal_inorder(root->_left, completion);
+        completion(root);
+        this->traversal_inorder(root->_right, completion);
+    }
+
+    template <typename t>
+    void binary_search_tree<t>::traversal_postorder(typename binary_search_tree<t>::node* root, std::function<void(node*)> completion) {
+        if (root == nullptr) {
+            return;
+        }
+
+        this->traversal_postorder(root->_left, completion);
+        this->traversal_postorder(root->_right, completion);
+        completion(root);
     }
 
     template <typename t>
@@ -77,7 +99,7 @@ namespace tk {
             return;
         }
 
-        this->search(value, [&new_node](node* parent, node* current, bool is_left) {
+        this->search(value, [this, &new_node](node* parent, node* current, bool is_left) {
             if (parent && current == nullptr) { // leaf 노드에 도달한 경우
                 if (is_left) {
                     parent->_left = new_node;
@@ -85,6 +107,8 @@ namespace tk {
                 } else {
                     parent->_right = new_node;
                 }
+
+                ++this->_size;
 
             } else { // 동일한 값을 가진 노드를 발견한 경우
                 delete new_node;
@@ -100,39 +124,41 @@ namespace tk {
 
         this->search(value, [this](node* parent, node* current, bool is_left) {
             if (parent && current) {
-                if (current->_left == nullptr && current->_right == nullptr) { // 대상 노드가 leaf 노드일 경우
-                    if (is_left) {
-                        parent->_left = nullptr;
+                node* replace_node;
 
-                    } else {
-                        parent->_right = nullptr;
+                if (current->_left == nullptr || current->_right == nullptr) { // 대상 노드의 자식이 1개만 있는 경우
+                    replace_node = current->_left ? : current->_right;
+
+                } else if (current->_left && current->_right) { // 대상 노드의 자식 노드가 둘 다 있는 경우
+                    auto successor_parent(current);
+                    auto successor(current->_right);
+
+                    while (successor->_left) { // 오른쪽 노드의 자식 중에 최소 값을 가진 노드 탐색(왼쪽 자식 노드가 없는 노드)
+                        successor_parent = successor;
+                        successor = successor->_left;
                     }
 
-                    delete current;
-
-                } else if (current->_left == nullptr || current->_right == nullptr) { // 대상 노드의 자식이 1개만 있는 경우
-                    auto child(current->_left ? : current->_right);
-
-                    if (is_left) {
-                        parent->_left = child;
+                    if (current->_right == successor) { // 최소 노드가 인접해 있는 경우
+                        successor->_left = current->_left;
 
                     } else {
-                        parent->_right = child;
+                        successor_parent->_left = successor->_right; // 최소 노드에 오른쪽 자식 노드가 있는 경우 부모 노드와 연결, 아니면 nullptr 대입
+                        successor->_left = current->_left;
+                        successor->_right = current->_right;
                     }
 
-                    delete current;
-
-                } else { // 대상 노드의 자식 노드가 둘 다 있는 경우
-                    auto min(this->search_min(current->_right)); // 오른쪽 노드의 자식 중에 최소 값을 가진 노드 탐색(왼쪽 값이 없는 노드)
-
-                    if (current->_right == min) { // 최소 노드가 인접해 있는 경우
-                        current = min;
-
-                    } else {
-
-                    }
-
+                    replace_node = successor;
                 }
+
+                if (is_left) {
+                    parent->_left = replace_node;
+
+                } else {
+                    parent->_right = replace_node;
+                }
+
+                delete current;
+                --this->_size;
             }
         });
     }

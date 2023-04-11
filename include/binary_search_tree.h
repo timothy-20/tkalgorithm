@@ -28,7 +28,9 @@ namespace tk {
 
     private:
         void search(t const& value, std::function<void(node* parent, node* current, bool is_left)> completion);
-        node* search_min(node* target_node);
+        void traversal_preorder(node* root, std::function<void(node* target)> completion);
+        void traversal_inorder(node* root, std::function<void(node* target)> completion);
+        void traversal_postorder(node* root, std::function<void(node* target)> completion);
 
     public:
         binary_search_tree();
