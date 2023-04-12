@@ -9,6 +9,7 @@ TEST(test_suite_binary_search_tree, initialize_test) {
 }
 
 TEST(test_suite_binary_search_tree, insert_test) {
+    tk::array_based_bst<int> tree;
 }
 
 TEST(test_suite_binary_search_tree, remove_test) {
