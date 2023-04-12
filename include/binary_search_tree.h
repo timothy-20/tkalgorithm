@@ -4,11 +4,12 @@
 
 #pragma once
 #include <iostream>
+#include <algorithm>
 #include <functional>
 
 namespace tk {
     template <typename t>
-    class binary_search_tree {
+    class binary_search_tree { // 이진 탐색 트리 인터페이스
     public:
         virtual void* search(t const& value) = 0;
         virtual void* traversal_preorder(void* root, std::function<void(void* target)> completion) const = 0;
@@ -31,21 +32,54 @@ namespace tk {
         size_t get_child_index(size_t index, bool is_left) const {
             return 2 * index + (is_left ? 1 : 2);
         }
+        void resize(size_t new_size) {
+            if (this->_tree == nullptr) {
+                return;
+            }
+
+            auto new_tree(new t[new_size]);
+            auto end(std::copy(this->_tree, this->_tree + (new_size >= this->_size ? this->_size : new_size), new_tree));
+            std::fill(end, new_tree + new_size, t());
+
+            delete[] this->_tree;
+            this->_tree = new_tree;
+            this->_size = new_size;
+        }
 
     public:
-        explicit array_based_bst(size_t size, t const& value) :
+        explicit array_based_bst(size_t size) :
         _size(size),
-        _tree(new t[size+1]) {
-            for (int i(0); i < size; i++) {
-                this->_tree[i] = value;
-            }
+        _tree(new t[size]) {
+            std::fill(this->_tree, this->_tree + this->_size, t());
         }
         ~array_based_bst() {
             delete[] this->_tree;
         }
         void insert(t const& value) override {
+            if (this->_tree[0] == t()) {
+                this->_tree[0] = value;
 
+                return;
+            }
+
+            size_t index(0);
+
+            while (true) {
+                if (this->_tree[index] == value) { // 중복된 값이 존재하는 경우 삽입을 중단
+                    return;
+                }
+
+                auto child_index(this->get_child_index(index, this->_tree[index] > value));
+
+                if (this->_tree[child_index] == t()) {
+                    this->_tree[child_index] = value;
+
+                } else {
+                    index = child_index;
+                }
+            }
         }
+        void remove()
     };
 
     template <typename t>
