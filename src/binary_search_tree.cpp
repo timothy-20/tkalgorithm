@@ -5,6 +5,7 @@
 #include <binary_search_tree.h>
 
 namespace tk {
+    // 배열 기반 이진 탐색 트리 구현
     template <typename t>
     array_based_bst<t>::array_based_bst(size_t size) :
      _size(size),
@@ -15,11 +16,6 @@ namespace tk {
     template <typename t>
     array_based_bst<t>::~array_based_bst() {
         delete[] this->_tree;
-    }
-
-    template <typename t>
-    size_t array_based_bst<t>::get_parent_index(size_t index) const {
-        return (index - (index % 2 == 1 ? 1 : 2)) / 2;
     }
 
     template <typename t>
@@ -46,6 +42,25 @@ namespace tk {
 
         this->_tree = new_tree;
         this->_size = new_size;
+    }
+
+    template <typename t>
+    void array_based_bst<t>::remove_at(size_t index) { // remove 함수에 대한 도우미 함수
+        while (this->is_exist(index)) { // 노드의 인덱스가 유효할 때까지 순회
+            auto left_node_index(this->get_child_index(index, true));
+            auto right_node_index(this->get_child_index(index, false));
+
+            if (!this->is_exist(left_node_index) && !this->is_exist(right_node_index)) { // 리프 노드 인덱스의 경우
+                this->_tree[index] = t();
+
+                return;
+
+            } else if (!this->is_exist(left_node_index) ^ !this->is_exist(right_node_index)) { // 자식 노드가 1개만 있는 경우
+                auto next_node_index(this->is_exist(left_node_index) ? left_node_index : right_node_index);
+                this->_tree[index] = this->_tree[next_node_index];
+                index = next_node_index;
+            }
+        }
     }
 
     template <typename t>
@@ -97,7 +112,7 @@ namespace tk {
         while (index_stack_cursor >= 0) {
             auto current_index(index_stack[index_stack_cursor--]);
 
-            if (current_index >= this->_size || this->_tree[current_index] == t()) {
+            if (!this->is_exist(current_index)) {
                 continue;
             }
 
@@ -125,7 +140,7 @@ namespace tk {
         size_t current_index(0);
 
         while (index_stack_cursor >= 0 || current_index < this->_size) {
-            if (current_index < this->_size && this->_tree[current_index] != t()) { // 현재 인덱스가 가르키고 있는 대상 유효할 경우(우선적으로 왼쪽 노드로 이동하기 위한 조건)
+            if (this->is_exist(current_index)) { // 현재 인덱스가 가르키고 있는 대상 유효할 경우(우선적으로 왼쪽 노드로 이동하기 위한 조건)
                 index_stack[++index_stack_cursor] = current_index;
                 current_index = this->get_child_index(current_index, true); // 왼쪽 자식의 인덱스 이동
 
@@ -154,7 +169,7 @@ namespace tk {
             auto current_index(index_stack[stack_cursor]);
             --stack_cursor;
 
-            if (current_index >= this->_size || this->_tree[current_index] == t()) { // 인덱스가 최대 범위를 벗어났거나, 값이 유효하지 않은 경우
+            if (!this->is_exist(current_index)) { // 유효하지 않은 노드 인덱스를 가르키는 경우
                 continue;
             }
 
@@ -208,19 +223,86 @@ namespace tk {
                 auto left_child_index(this->get_child_index(current, true));
                 auto right_child_index(this->get_child_index(current, false));
 
-                if ((left_child_index < this->_size && this->_tree[left_child_index] != t())
-                ^ (right_child_index < this->_size && this->_tree[right_child_index] != t())) {
+                if (this->is_exist(left_child_index) && this->is_exist(right_child_index)) { // 양쪽 자식 노드 인덱스 모두 유효한 경우
+                    auto successor_index(this->search_edge(right_child_index, true)); // 오른쪽 자식 노드 인덱스의 최소 노드 인덱스
+                    this->_tree[current] = this->_tree[successor_index]; // 계승 노드의 값을 제거할 노드에 복사
+                    auto successor_right_child_index(this->get_child_index(successor_index, false)); // 계승 노드 인덱스의 오른쪽 자식이 있는지 확인
+                    this->_tree[successor_index] = this->is_exist(successor_right_child_index) ? this->_tree[successor_right_child_index] : t(); // 계승 노드의 오른쪽 자식이 있는 경우 해당 값을, 아닌 경우 기본 값을 계승 노드(최소값 노드)에 복사
 
+                } else { // 리프 노드 인덱스이거나 자식이 하나인 경우
+                    this->remove_at(current);
                 }
-
-                if ((left_child_index >= this->_size || this->_tree[left_child_index] == t())
-                ^ (right_child_index >= this->_size || this->_tree[right_child_index] == t())) { // 한 개의 자식만 있는 노드 인덱스인 경우
-
-                }
-//                if ()
             }
         });
     }
+
+    // 연결 리스트 기반 이진 탐색 트리 구현
+    template <typename t>
+    linked_list_based_bst<t>::linked_list_based_bst() {
+
+    }
+
+    template <typename t>
+    linked_list_based_bst<t>::linked_list_based_bst(std::initializer_list<t> list) {
+
+    }
+
+    template <typename t>
+    linked_list_based_bst<t>::linked_list_based_bst(size_t size, t const& value) {
+
+    }
+
+    template <typename t>
+    linked_list_based_bst<t>::linked_list_based_bst(size_t size) {
+
+    }
+
+    template <typename t>
+    linked_list_based_bst<t>::~linked_list_based_bst() {
+
+    }
+
+    template <typename t>
+    void linked_list_based_bst<t>::search(t const& value, std::function<void(tk::node<t>* parent, tk::node<t>* current, bool is_left)> const& completion) const {
+
+    }
+
+    template <typename t>
+    tk::node<t>* linked_list_based_bst<t>::search_edge(tk::node<t>* root, bool is_min) const {
+
+    }
+
+    template <typename t>
+    void linked_list_based_bst<t>::traversal_preorder(tk::node<t>* root, std::function<void(t& value)> const& completion) const {
+
+    }
+
+    template <typename t>
+    void linked_list_based_bst<t>::traversal_inorder(tk::node<t>* root, std::function<void(t& value)> const& completion) const {
+
+    }
+
+    template <typename t>
+    void linked_list_based_bst<t>::traversal_postorder(tk::node<t>* root, std::function<void(t& value)> const& completion) const {
+
+    }
+
+    template <typename t>
+    void linked_list_based_bst<t>::insert(t const& value) {
+
+    }
+
+    template <typename t>
+    void linked_list_based_bst<t>::remove(t const& value) {
+
+    }
+
+
+
+
+
+
+
 
 
 //    template <typename t>

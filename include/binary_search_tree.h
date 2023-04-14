@@ -27,10 +27,10 @@ namespace tk {
         t* _tree;
 
     private:
-        size_t get_parent_index(size_t index) const;
         size_t get_child_index(size_t index, bool is_left) const;
         bool is_exist(size_t index) const;
         void resize(size_t new_size);
+        void remove_at(size_t index);
 
     public:
         explicit array_based_bst(size_t size = 14); // level 3 까지는 기본적으로 할당
@@ -44,42 +44,38 @@ namespace tk {
         void remove(t const& value) override;
     };
 
-    template <typename t>
-    struct node;
+    template <typename nt>
+    struct node {
+        nt _value;
+        node* _left;
+        node* _right;
+
+        explicit node(nt const& value) :
+        _value(value),
+        _left(nullptr),
+        _right(nullptr) {}
+        node() : node(nt()) {}
+    };
 
     template <typename t>
-    class linked_list_based_bst : binary_search_tree<t, node<t>*> {
+    class linked_list_based_bst : public binary_search_tree<t, tk::node<t>*> {
     private:
-        struct node {
-            t _value;
-            node* _left;
-            node* _right;
+        size_t _size;
+        tk::node<t>* _root;
 
-            explicit node(t const& value) :
-                    _value(value),
-                    _left(nullptr),
-                    _right(nullptr) {}
-            node() : node(t()) {}
-        };
-
-//    private:
-//        size_t _size;
-//        node* _root;
-//
-//    private:
-//        void search(t const& value, std::function<void(node* parent, node* current, bool is_left)> completion);
-//        void traversal_preorder(node* root, std::function<void(node* target)> completion);
-//        void traversal_inorder(node* root, std::function<void(node* target)> completion);
-//        void traversal_postorder(node* root, std::function<void(node* target)> completion);
-//
-//    public:
-//        linked_list_based_bst();
-//        linked_list_based_bst(std::initializer_list<t> list);
-//        explicit linked_list_based_bst(size_t size, t const& value);
-//        explicit linked_list_based_bst(size_t size);
-//        ~linked_list_based_bst();
-//        void insert(t const& value);
-//        void remove(t const& value);
+    public:
+        linked_list_based_bst();
+        linked_list_based_bst(std::initializer_list<t> list);
+        explicit linked_list_based_bst(size_t size, t const& value);
+        explicit linked_list_based_bst(size_t size);
+        ~linked_list_based_bst();
+        void search(t const& value, std::function<void(tk::node<t>* parent, tk::node<t>* current, bool is_left)> const& completion) const override;
+        tk::node<t>* search_edge(tk::node<t>* root, bool is_min) const override;
+        void traversal_preorder(tk::node<t>* root, std::function<void(t& value)> const& completion) const override;
+        void traversal_inorder(tk::node<t>* root, std::function<void(t& value)> const& completion) const override;
+        void traversal_postorder(tk::node<t>* root, std::function<void(t& value)> const& completion) const override;
+        void insert(t const& value) override;
+        void remove(t const& value) override;
     };
 
     template class binary_search_tree<int, size_t>;
