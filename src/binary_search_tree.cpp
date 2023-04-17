@@ -68,16 +68,16 @@ namespace tk {
     }
 
     template <typename t>
-    void array_based_bst<t>::search(t const& value, std::function<void(size_t parent, size_t current, direction direction)> const& completion) const {
-        if (this->_tree[0] == t()) {
-            completion(0, 0, direction::none);
-
-            return;
-        }
-
+    void array_based_bst<t>::search(t const& value, std::function<void(size_t& parent, size_t& current, direction direction)> const& completion) const {
         size_t parent_index(0);
         size_t current_index(0);
         auto direction(direction::none);
+
+        if (this->_tree[0] == t()) {
+            completion(parent_index, current_index, direction);
+
+            return;
+        }
 
         while (current_index < this->_size) { // 트리의 크기를 넘지 않을 때까지 순회
             if (this->_tree[current_index] == value) { // 값에 해당하는 노드 인덱스에 도달한 경우
@@ -98,14 +98,13 @@ namespace tk {
             return 0;
         }
 
-        auto current_index(root);
         auto direction(extrema == extrema::min ? direction::left : direction::right);
 
         do {
-            current_index = this->get_child_index(current_index, direction);
-        } while (current_index < this->_size);
+            root = this->get_child_index(root, direction);
+        } while (root < this->_size);
 
-        return current_index;
+        return root;
     }
 
     template <typename t>
@@ -204,7 +203,7 @@ namespace tk {
 
     template <typename t>
     void array_based_bst<t>::insert(t const& value) {
-        this->search(value, [this, &value](size_t parent, size_t current, direction direction) {
+        this->search(value, [this, &value](size_t& parent, size_t& current, direction direction) {
             if (current == 0) { // 루트 노드의 인덱스 값이 초기값인 경우
                 this->_tree[current] = value;
 
@@ -223,7 +222,7 @@ namespace tk {
 
     template <typename t>
     void array_based_bst<t>::remove(t const& value) {
-        this->search(value, [this, &value](size_t parent, size_t current, direction direction) {
+        this->search(value, [this, &value](size_t& parent, size_t& current, direction direction) {
             if (value == this->_tree[current]) { // 트리에서 해당하는 값의 노드 인덱스를 찾아낸 경우
                 auto left_child_index(this->get_child_index(current, direction::left));
                 auto right_child_index(this->get_child_index(current, direction::right));
@@ -268,31 +267,45 @@ namespace tk {
     }
 
     template <typename t>
-    void linked_list_based_bst<t>::search(t const& value, std::function<void(node* parent, node* current, direction direction)> const& completion) const {
-        node* parent;
+    void linked_list_based_bst<t>::search(t const& value, std::function<void(node*& parent, node*& current, direction direction)> const& completion) const {
+        node* parent(nullptr);
         node* current(this->_root);
-        bool is_left;
+        auto direction(direction::none);
 
         while (current) {
+            if (value == current->_value) { // 트리에서 동일한 값을 찾은 경우
+                break;
+            }
+
             parent = current;
 
             if (value < current->_value) { // 현재 노드의 값이 삽입하려는 값보다 작은 경우
                 current = current->_left; // 왼쪽 자식 노드로 이동
-                is_left = true;
+                direction = direction::left;
 
-            } else if (value > current->_value) { // 현재 노드의 값이 삽입하려는 값보다 큰 경우
+            } else { // 현재 노드의 값이 삽입하려는 값보다 큰 경우
                 current = current->_right; // 오른쪽 자식 노드로 이동
-                is_left = false;
-
-            } else { // 삽입하려는 값과 같은 값이 트리에 있는 경우
-                break;
+                direction = direction::right;
             }
         }
+
+        completion(parent, current, direction);
     }
 
     template <typename t>
-    linked_list_based_bst<t>::node* linked_list_based_bst<t>::search_extrema(node* root, extrema extrema) const {
+    typename linked_list_based_bst<t>::node* linked_list_based_bst<t>::search_extrema(node* root, extrema extrema) const {
+        node* parent(nullptr);
 
+        while (root) {
+            parent = root;
+
+            switch (extrema) {
+                case extrema::min: root = root->_left; break;
+                case extrema::max: root = root->_right; break;
+            }
+        }
+
+        return parent;
     }
 
     template <typename t>
@@ -312,144 +325,60 @@ namespace tk {
 
     template <typename t>
     void linked_list_based_bst<t>::insert(t const& value) {
+        this->search(value, [value](node*& parent, node*& current, direction direction) {
+            if (!current) { // 값이 트리에 포함되어 있지 않은 경우
+                auto new_node(new node(value));
 
+                switch (direction) {
+                    case direction::left: parent->_left = new_node; break;
+                    case direction::right: parent->_right = new_node; break;
+                    case direction::none: return; // 루트 노드가 nullptr인 경우
+                }
+
+                new_node->_parent = parent; // 부모 노드 설정
+            }
+        });
     }
 
     template <typename t>
     void linked_list_based_bst<t>::remove(t const& value) {
+        this->search(value, [this](node*& parent, node*& current, direction direction) {
+            if (current) { // 값이 트리에 포함되어 있는 경우
+                if (current->_left && current->_right) { // 대상 노드의 자식이 2개 다 있는 경우
+                    auto successor(this->search_extrema(current->_right, extrema::min)); // 대상 노드의 오른쪽 자식의 최소 값 노드를 가져옴
+                    auto successor_right_child(successor->_right);
+                    current->_value = successor->_value; // 계승 노드의 값을 삭제 대상 노드로 복사(변경)
 
+                    if (successor_right_child) { // 계승 노드에 오른쪽 자식이 있는 경우
+                        successor->_parent->_left = successor_right_child;
+                        successor_right_child->_parent = successor->_parent;
+                    }
+
+                    delete successor;
+                    successor = nullptr;
+
+                } else {
+                    if (!current->_left ^ !current->_right) { // 대상 노드의 자식이 1개만 있는 경우
+                        node* child_node(current->_left ? : current->_right);
+
+                        switch (direction) {
+                            case direction::left: parent->_left = child_node; break;
+                            case direction::right: parent->_right = child_node; break;
+                            default: break;
+                        }
+
+                        child_node->_parent = parent;
+                    }
+
+                    delete current;
+                    current = nullptr;
+                }
+            }
+        });
     }
 
-
-
-
-
-
-
-
-
-//    template <typename t>
-//    binary_search_tree<t>::binary_search_tree():
-//    _root(nullptr),
-//    _size(0) {}
-//
-//    template <typename t>
-//    binary_search_tree<t>::binary_search_tree(std::initializer_list<t> list) : binary_search_tree() {
-//        for (auto const& value : list) {
-//            this->insert(value);
-//        }
-//    }
-//
-//    template <typename t>
-//    binary_search_tree<t>::binary_search_tree(size_t size, t const& value) : binary_search_tree() {
-//        for (int i(0); i < size; i++) {
-//            this->insert(value);
-//        }
-//    }
-//
-//    template <typename t>
-//    binary_search_tree<t>::binary_search_tree(size_t size) : binary_search_tree(size, t()) {}
-//
-//    template <typename t>
-//    binary_search_tree<t>::~binary_search_tree() {
-//        this->traversal_postorder(this->_root, [](node* target) {
-//            delete target;
-//        });
-//    }
-//
-//    template <typename t>
-//    void binary_search_tree<t>::search(t const& value, std::function<void(node*, node*, bool)> completion) {
-//        node* parent;
-//        auto current(this->_root);
-//        bool is_left(false);
-//
-//        while (current && current->_value != value) {
-//            parent = current;
-//
-//            if (value < current->_value) {
-//                is_left = true;
-//                current = current->_left;
-//
-//            } else if (value > current->_value) {
-//                is_left = false;
-//                current = current->_right;
-//            }
-//        }
-//
-//        completion(parent, current, is_left);
-//    }
-//
-//    template <typename t>
-//    void binary_search_tree<t>::insert(t const& value) {
-//        auto new_node(new node(value));
-//
-//        if (this->_root == nullptr) {
-//            this->_root = new_node;
-//
-//            return;
-//        }
-//
-//        this->search(value, [this, &new_node](node* parent, node* current, bool is_left) {
-//            if (parent && current == nullptr) { // leaf 노드에 도달한 경우
-//                if (is_left) {
-//                    parent->_left = new_node;
-//
-//                } else {
-//                    parent->_right = new_node;
-//                }
-//
-//                ++this->_size;
-//
-//            } else { // 동일한 값을 가진 노드를 발견한 경우
-//                delete new_node;
-//            }
-//        });
-//    }
-//
-//    template <typename t>
-//    void binary_search_tree<t>::remove(t const& value) {
-//        if (this->_root == nullptr) {
-//            return;
-//        }
-//
-//        this->search(value, [this](node* parent, node* current, bool is_left) {
-//            if (parent && current) {
-//                node* replace_node;
-//
-//                if (current->_left == nullptr || current->_right == nullptr) { // 대상 노드의 자식이 1개만 있는 경우
-//                    replace_node = current->_left ? : current->_right;
-//
-//                } else if (current->_left && current->_right) { // 대상 노드의 자식 노드가 둘 다 있는 경우
-//                    auto successor_parent(current);
-//                    auto successor(current->_right);
-//
-//                    while (successor->_left) { // 오른쪽 노드의 자식 중에 최소 값을 가진 노드 탐색(왼쪽 자식 노드가 없는 노드)
-//                        successor_parent = successor;
-//                        successor = successor->_left;
-//                    }
-//
-//                    if (current->_right == successor) { // 최소 노드가 인접해 있는 경우
-//                        successor->_left = current->_left;
-//
-//                    } else {
-//                        successor_parent->_left = successor->_right; // 최소 노드에 오른쪽 자식 노드가 있는 경우 부모 노드와 연결, 아니면 nullptr 대입
-//                        successor->_left = current->_left;
-//                        successor->_right = current->_right;
-//                    }
-//
-//                    replace_node = successor;
-//                }
-//
-//                if (is_left) {
-//                    parent->_left = replace_node;
-//
-//                } else {
-//                    parent->_right = replace_node;
-//                }
-//
-//                delete current;
-//                --this->_size;
-//            }
-//        });
-//    }
+    template class binary_search_tree<int, size_t>;
+    template class binary_search_tree<int, node<int>*>;
+    template class array_based_bst<int>;
+    template class linked_list_based_bst<int>;
 }

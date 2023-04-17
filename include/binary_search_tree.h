@@ -15,7 +15,7 @@ namespace tk {
         enum class extrema { min, max };
 
     public:
-        virtual void search(value_t const& value, std::function<void(node_t parent, node_t current, direction direction)> const& completion) const = 0;
+        virtual void search(value_t const& value, std::function<void(node_t& parent, node_t& current, direction direction)> const& completion) const = 0;
         virtual node_t search_extrema(node_t root, extrema extrema) const = 0;
         virtual void traversal_preorder(node_t root, std::function<void(value_t& value)> const& completion) const = 0;
         virtual void traversal_inorder(node_t root, std::function<void(value_t& value)> const& completion) const = 0;
@@ -33,7 +33,7 @@ namespace tk {
         explicit array_based_bst(size_t size = 14); // level 3 까지는 기본적으로 할당
         ~array_based_bst();
 
-        void search(t const& value, std::function<void(size_t parent, size_t current, direction direction)> const& completion) const override;
+        void search(t const& value, std::function<void(size_t& parent, size_t& current, direction direction)> const& completion) const override;
         size_t search_extrema(size_t root, extrema extrema) const override;
         void traversal_preorder(size_t root, std::function<void(t& value)> const& completion) const override;
         void traversal_inorder(size_t root, std::function<void(t& value)> const& completion) const override;
@@ -57,11 +57,13 @@ namespace tk {
         nt _value;
         node* _left;
         node* _right;
+        node* _parent;
 
         explicit node(nt const& value) :
         _value(value),
         _left(nullptr),
-        _right(nullptr) {}
+        _right(nullptr),
+        _parent(nullptr) {}
         node() : node(nt()) {}
     };
 
@@ -78,7 +80,7 @@ namespace tk {
         explicit linked_list_based_bst(size_t size);
         ~linked_list_based_bst();
 
-        void search(t const& value, std::function<void(node* parent, node* current, direction direction)> const& completion) const override;
+        void search(t const& value, std::function<void(node*& parent, node*& current, direction direction)> const& completion) const override;
         node* search_extrema(node* root, extrema extrema) const override;
         void traversal_preorder(node* root, std::function<void(t& value)> const& completion) const override;
         void traversal_inorder(node* root, std::function<void(t& value)> const& completion) const override;
@@ -90,9 +92,4 @@ namespace tk {
         size_t _size;
         node* _root;
     };
-
-    template class binary_search_tree<int, size_t>;
-    template class binary_search_tree<int, node<int>*>;
-    template class array_based_bst<int>;
-    template class linked_list_based_bst<int>;
 }
