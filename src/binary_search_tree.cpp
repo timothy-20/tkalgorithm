@@ -3,6 +3,7 @@
 //
 
 #include <binary_search_tree.h>
+#include <stack> // 1차적인 구현을 위해 std 라이브러리 사용
 
 namespace tk {
     // 배열 기반 이진 탐색 트리 구현
@@ -310,11 +311,43 @@ namespace tk {
 
     template <typename t>
     void linked_list_based_bst<t>::traversal_preorder(node* root, std::function<void(t& value)> const& completion) const {
+        if (!root) {
+            // 예외 발생
 
+            return;
+        }
+
+        std::stack<node*> node_stack;
+
+        node_stack.push(root);
+
+        while (!node_stack.empty()) {
+            auto top_node(node_stack.top());
+
+            node_stack.pop();
+            completion(top_node->_value);
+
+            // 스택이 LIFO(last in first out)로 동작하기 때문에 right를 먼저 삽입
+            if (top_node->_right) {
+                node_stack.push(top_node->_right);
+            }
+
+            if (top_node->_left) {
+                node_stack.push(top_node->_left);
+            }
+        }
     }
 
     template <typename t>
     void linked_list_based_bst<t>::traversal_inorder(node* root, std::function<void(t& value)> const& completion) const {
+        if (!root) {
+            // 예외 발생
+
+            return;
+        }
+
+        std::stack<node*> node_stack;
+
 
     }
 
