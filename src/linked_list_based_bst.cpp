@@ -38,6 +38,8 @@ namespace tk {
         node* current(this->_root);
         auto direction(direction::none);
 
+        // root가 nullptr인 경우의 처리 필요
+
         while (current) {
             if (value == current->_value) { // 트리에서 동일한 값을 찾은 경우
                 break;
@@ -121,6 +123,7 @@ namespace tk {
             // 3. 노드가 출력되는 상황에서 출력되는 노드에 오른쪽 노드가 있다면 이를 스택에 채움
 
             if (node_stack.top()->_left) {
+
                 node_stack.push(node_stack.top()->_left);
 
             } else {
@@ -194,6 +197,11 @@ namespace tk {
                 }
             }
         });
+    }
+
+    template <typename t>
+    node<t>* linked_list_based_bst<t>::root() const {
+        return this->_root;
     }
 
     template class binary_search_tree<int, node<int>*>;

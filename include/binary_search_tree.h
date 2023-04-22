@@ -22,5 +22,6 @@ namespace tk {
         virtual void traversal_postorder(node_t root, std::function<void(value_t& value)> const& completion) const = 0;
         virtual void insert(value_t const& value) = 0;
         virtual void remove(value_t const& value) = 0;
+        virtual node_t root() const = 0;
     };
 }

@@ -42,9 +42,9 @@ namespace tk {
         void traversal_postorder(node* root, std::function<void(t& value)> const& completion) const override;
         void insert(t const& value) override;
         void remove(t const& value) override;
+        node* root() const override;
 
     private:
-        size_t _size;
         node* _root;
     };
 }

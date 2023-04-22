@@ -8,8 +8,8 @@ namespace tk {
     // 배열 기반 이진 탐색 트리 구현
     template <typename t>
     array_list_based_bst<t>::array_list_based_bst(size_t size) :
-            _size(size),
-            _tree(new t[size]) {
+    _size(size),
+    _tree(new t[size]) {
         std::fill(this->_tree, this->_tree + this->_size, t());
     }
 
@@ -238,6 +238,11 @@ namespace tk {
                 }
             }
         });
+    }
+
+    template <typename t>
+    size_t array_list_based_bst<t>::root() const {
+        return 0;
     }
 
     template class binary_search_tree<int, size_t>;

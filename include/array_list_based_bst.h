@@ -23,6 +23,7 @@ namespace tk {
         void traversal_postorder(size_t root, std::function<void(t& value)> const& completion) const override;
         void insert(t const& value) override;
         void remove(t const& value) override;
+        size_t root() const override;
 
     private:
         size_t _size;
