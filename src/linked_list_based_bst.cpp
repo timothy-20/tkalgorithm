@@ -34,11 +34,15 @@ namespace tk {
 
     template <typename t>
     void linked_list_based_bst<t>::search(t const& value, std::function<void(node*& parent, node*& current, direction direction)> const& completion) const {
+        if (!this->_root) {
+            // 예외 발생
+
+            return;
+        }
+
         node* parent(nullptr);
         node* current(this->_root);
         auto direction(direction::none);
-
-        // root가 nullptr인 경우의 처리 필요
 
         while (current) {
             if (value == current->_value) { // 트리에서 동일한 값을 찾은 경우
@@ -62,6 +66,12 @@ namespace tk {
 
     template <typename t>
     typename linked_list_based_bst<t>::node* linked_list_based_bst<t>::search_extrema(node* root, extrema extrema) const {
+        if (!root) {
+            // 예외 발생
+
+            return nullptr;
+        }
+
         node* parent(nullptr);
 
         while (root) {
@@ -142,11 +152,21 @@ namespace tk {
 
     template <typename t>
     void linked_list_based_bst<t>::traversal_postorder(node* root, std::function<void(t& value)> const& completion) const {
+        if (!root) {
+            // 예외 발생
 
+            return;
+        }
     }
 
     template <typename t>
     void linked_list_based_bst<t>::insert(t const& value) {
+        if (!this->_root) {
+            this->_root = new node(value);
+
+            return;
+        }
+
         this->search(value, [value](node*& parent, node*& current, direction direction) {
             if (!current) { // 값이 트리에 포함되어 있지 않은 경우
                 auto new_node(new node(value));
@@ -164,6 +184,8 @@ namespace tk {
 
     template <typename t>
     void linked_list_based_bst<t>::remove(t const& value) {
+        // 예외 처리, search에서 root가 nullptr 일 경우 예외를 발생시키고 있으니 이를 전달하면 될 듯.
+
         this->search(value, [this](node*& parent, node*& current, direction direction) {
             if (current) { // 값이 트리에 포함되어 있는 경우
                 if (current->_left && current->_right) { // 대상 노드의 자식이 2개 다 있는 경우

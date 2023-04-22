@@ -32,7 +32,7 @@ TEST(test_suite_binary_search_tree, preorder_traversal_test) {
 }
 
 TEST(test_suite_binary_search_tree, inorder_traversal_test) {
-    int seed_value[7] { 1, 2, 3, 4, 5, 6, 7 };
+    int seed_value[7]{ 1, 2, 3, 4, 5, 6, 7 };
     tk::linked_list_based_bst<int> list;
 
     for (int value : seed_value) {
