@@ -1,26 +1,25 @@
 //
-// Created by 임정운 on 2023/04/10.
+// Created by jungu on 4/22/2023.
 //
 
-#include <binary_search_tree.h>
-#include <stack> // 1차적인 구현을 위해 std 라이브러리 사용
+#include <array_list_based_bst.h>
 
 namespace tk {
     // 배열 기반 이진 탐색 트리 구현
     template <typename t>
-    array_based_bst<t>::array_based_bst(size_t size) :
-     _size(size),
-     _tree(new t[size]) {
-         std::fill(this->_tree, this->_tree + this->_size, t());
+    array_list_based_bst<t>::array_list_based_bst(size_t size) :
+            _size(size),
+            _tree(new t[size]) {
+        std::fill(this->_tree, this->_tree + this->_size, t());
     }
 
     template <typename t>
-    array_based_bst<t>::~array_based_bst() {
+    array_list_based_bst<t>::~array_list_based_bst() {
         delete[] this->_tree;
     }
 
     template <typename t>
-    size_t array_based_bst<t>::get_child_index(size_t index, direction direction) const {
+    size_t array_list_based_bst<t>::get_child_index(size_t index, direction direction) const {
         switch (direction) {
             case direction::none: return index;
             case direction::left: return 2 * index + 1;
@@ -29,12 +28,12 @@ namespace tk {
     }
 
     template <typename t>
-    bool array_based_bst<t>::is_exist(size_t index) const {
+    bool array_list_based_bst<t>::is_exist(size_t index) const {
         return index < this->_size && this->_tree[index] != t();
     }
 
     template <typename t>
-    void array_based_bst<t>::resize(size_t new_size) {
+    void array_list_based_bst<t>::resize(size_t new_size) {
         if (this->_tree == nullptr) {
             return;
         }
@@ -50,7 +49,7 @@ namespace tk {
     }
 
     template <typename t>
-    void array_based_bst<t>::remove_at(size_t index) { // remove 함수에 대한 도우미 함수
+    void array_list_based_bst<t>::remove_at(size_t index) { // remove 함수에 대한 도우미 함수
         while (this->is_exist(index)) { // 노드의 인덱스가 유효할 때까지 순회
             auto left_node_index(this->get_child_index(index, direction::left));
             auto right_node_index(this->get_child_index(index, direction::right));
@@ -69,7 +68,7 @@ namespace tk {
     }
 
     template <typename t>
-    void array_based_bst<t>::search(t const& value, std::function<void(size_t& parent, size_t& current, direction direction)> const& completion) const {
+    void array_list_based_bst<t>::search(t const& value, std::function<void(size_t& parent, size_t& current, direction direction)> const& completion) const {
         size_t parent_index(0);
         size_t current_index(0);
         auto direction(direction::none);
@@ -94,7 +93,7 @@ namespace tk {
     }
 
     template <typename t>
-    size_t array_based_bst<t>::search_extrema(size_t root, extrema extrema) const {
+    size_t array_list_based_bst<t>::search_extrema(size_t root, extrema extrema) const {
         if (!this->is_exist(root)) {
             return 0;
         }
@@ -109,7 +108,7 @@ namespace tk {
     }
 
     template <typename t>
-    void array_based_bst<t>::traversal_preorder(size_t root, std::function<void(t& value)> const& completion) const {
+    void array_list_based_bst<t>::traversal_preorder(size_t root, std::function<void(t& value)> const& completion) const {
         auto index_stack(new size_t[this->_size]);
         long index_stack_cursor(0);
         index_stack[index_stack_cursor] = 0;
@@ -139,7 +138,7 @@ namespace tk {
     }
 
     template <typename t>
-    void array_based_bst<t>::traversal_inorder(size_t root, std::function<void(t& value)> const& completion) const {
+    void array_list_based_bst<t>::traversal_inorder(size_t root, std::function<void(t& value)> const& completion) const {
         auto index_stack(new size_t[this->_size]);
         long index_stack_cursor(-1);
         size_t current_index(0);
@@ -162,7 +161,7 @@ namespace tk {
     }
 
     template <typename t>
-    void array_based_bst<t>::traversal_postorder(size_t root, std::function<void(t& value)> const& completion) const {
+    void array_list_based_bst<t>::traversal_postorder(size_t root, std::function<void(t& value)> const& completion) const {
         auto visited_stack(new bool[this->_size]); // 방문 사실을 기록하는 스택
         auto index_stack(new size_t[this->_size]);
         long stack_cursor(0);
@@ -203,7 +202,7 @@ namespace tk {
     }
 
     template <typename t>
-    void array_based_bst<t>::insert(t const& value) {
+    void array_list_based_bst<t>::insert(t const& value) {
         this->search(value, [this, &value](size_t& parent, size_t& current, direction direction) {
             if (current == 0) { // 루트 노드의 인덱스 값이 초기값인 경우
                 this->_tree[current] = value;
@@ -222,7 +221,7 @@ namespace tk {
     }
 
     template <typename t>
-    void array_based_bst<t>::remove(t const& value) {
+    void array_list_based_bst<t>::remove(t const& value) {
         this->search(value, [this, &value](size_t& parent, size_t& current, direction direction) {
             if (value == this->_tree[current]) { // 트리에서 해당하는 값의 노드 인덱스를 찾아낸 경우
                 auto left_child_index(this->get_child_index(current, direction::left));
@@ -241,177 +240,6 @@ namespace tk {
         });
     }
 
-    // 연결 리스트 기반 이진 탐색 트리 구현
-    template <typename t>
-    linked_list_based_bst<t>::linked_list_based_bst() {
-
-    }
-
-    template <typename t>
-    linked_list_based_bst<t>::linked_list_based_bst(std::initializer_list<t> list) {
-
-    }
-
-    template <typename t>
-    linked_list_based_bst<t>::linked_list_based_bst(size_t size, t const& value) {
-
-    }
-
-    template <typename t>
-    linked_list_based_bst<t>::linked_list_based_bst(size_t size) {
-
-    }
-
-    template <typename t>
-    linked_list_based_bst<t>::~linked_list_based_bst() {
-
-    }
-
-    template <typename t>
-    void linked_list_based_bst<t>::search(t const& value, std::function<void(node*& parent, node*& current, direction direction)> const& completion) const {
-        node* parent(nullptr);
-        node* current(this->_root);
-        auto direction(direction::none);
-
-        while (current) {
-            if (value == current->_value) { // 트리에서 동일한 값을 찾은 경우
-                break;
-            }
-
-            parent = current;
-
-            if (value < current->_value) { // 현재 노드의 값이 삽입하려는 값보다 작은 경우
-                current = current->_left; // 왼쪽 자식 노드로 이동
-                direction = direction::left;
-
-            } else { // 현재 노드의 값이 삽입하려는 값보다 큰 경우
-                current = current->_right; // 오른쪽 자식 노드로 이동
-                direction = direction::right;
-            }
-        }
-
-        completion(parent, current, direction);
-    }
-
-    template <typename t>
-    typename linked_list_based_bst<t>::node* linked_list_based_bst<t>::search_extrema(node* root, extrema extrema) const {
-        node* parent(nullptr);
-
-        while (root) {
-            parent = root;
-
-            switch (extrema) {
-                case extrema::min: root = root->_left; break;
-                case extrema::max: root = root->_right; break;
-            }
-        }
-
-        return parent;
-    }
-
-    template <typename t>
-    void linked_list_based_bst<t>::traversal_preorder(node* root, std::function<void(t& value)> const& completion) const {
-        if (!root) {
-            // 예외 발생
-
-            return;
-        }
-
-        std::stack<node*> node_stack;
-
-        node_stack.push(root);
-
-        while (!node_stack.empty()) {
-            auto top_node(node_stack.top());
-
-            node_stack.pop();
-            completion(top_node->_value);
-
-            // 스택이 LIFO(last in first out)로 동작하기 때문에 right를 먼저 삽입
-            if (top_node->_right) {
-                node_stack.push(top_node->_right);
-            }
-
-            if (top_node->_left) {
-                node_stack.push(top_node->_left);
-            }
-        }
-    }
-
-    template <typename t>
-    void linked_list_based_bst<t>::traversal_inorder(node* root, std::function<void(t& value)> const& completion) const {
-        if (!root) {
-            // 예외 발생
-
-            return;
-        }
-
-        std::stack<node*> node_stack;
-
-
-    }
-
-    template <typename t>
-    void linked_list_based_bst<t>::traversal_postorder(node* root, std::function<void(t& value)> const& completion) const {
-
-    }
-
-    template <typename t>
-    void linked_list_based_bst<t>::insert(t const& value) {
-        this->search(value, [value](node*& parent, node*& current, direction direction) {
-            if (!current) { // 값이 트리에 포함되어 있지 않은 경우
-                auto new_node(new node(value));
-
-                switch (direction) {
-                    case direction::left: parent->_left = new_node; break;
-                    case direction::right: parent->_right = new_node; break;
-                    case direction::none: return; // 루트 노드가 nullptr인 경우
-                }
-
-                new_node->_parent = parent; // 부모 노드 설정
-            }
-        });
-    }
-
-    template <typename t>
-    void linked_list_based_bst<t>::remove(t const& value) {
-        this->search(value, [this](node*& parent, node*& current, direction direction) {
-            if (current) { // 값이 트리에 포함되어 있는 경우
-                if (current->_left && current->_right) { // 대상 노드의 자식이 2개 다 있는 경우
-                    auto successor(this->search_extrema(current->_right, extrema::min)); // 대상 노드의 오른쪽 자식의 최소 값 노드를 가져옴
-                    auto successor_right_child(successor->_right);
-                    current->_value = successor->_value; // 계승 노드의 값을 삭제 대상 노드로 복사(변경)
-
-                    if (successor_right_child) { // 계승 노드에 오른쪽 자식이 있는 경우
-                        successor->_parent->_left = successor_right_child;
-                        successor_right_child->_parent = successor->_parent;
-                    }
-
-                    delete successor;
-                    successor = nullptr;
-
-                } else {
-                    if (!current->_left ^ !current->_right) { // 대상 노드의 자식이 1개만 있는 경우
-                        node* child_node(current->_left ? : current->_right);
-
-                        switch (direction) {
-                            case direction::left: parent->_left = child_node; break;
-                            case direction::right: parent->_right = child_node; break;
-                            default: break;
-                        }
-
-                        child_node->_parent = parent;
-                    }
-
-                    delete current;
-                    current = nullptr;
-                }
-            }
-        });
-    }
-
     template class binary_search_tree<int, size_t>;
-    template class binary_search_tree<int, node<int>*>;
-    template class array_based_bst<int>;
-    template class linked_list_based_bst<int>;
+    template class array_list_based_bst<int>;
 }
