@@ -3,7 +3,7 @@
 //
 
 #include <linked_list_based_bst.h>
-#include <stack> // 1차적인 구현을 위해 std 라이브러리 사용
+#include <stack> // 구현을 위해 1차적으로 std 라이브러리 사용
 
 namespace tk {
     // 연결 리스트 기반 이진 탐색 트리 구현

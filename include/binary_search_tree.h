@@ -9,7 +9,20 @@
 
 namespace tk {
     template <typename value_t, typename node_t>
-    class binary_search_tree { // 이진 탐색 트리 인터페이스
+    class binary_search_tree {
+    public:
+        class null_pointer_access : public std::exception {
+        public:
+            explicit null_pointer_access(char const* reason) : _reason(reason) {}
+            virtual ~null_pointer_access() noexcept {}
+            virtual char const* what() const noexcept override {
+                return this->_reason;
+            }
+
+        private:
+            char const* _reason;
+        };
+
     public:
         enum class direction { none, left, right };
         enum class extrema { min, max };
