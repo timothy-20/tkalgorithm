@@ -8,21 +8,20 @@
 #include <functional>
 
 namespace tk {
+    class null_pointer_access : public std::exception {
+    public:
+        explicit null_pointer_access(char const* reason) : _reason(reason) {}
+        ~null_pointer_access() noexcept override = default;
+        char const* what() const noexcept override {
+            return this->_reason;
+        }
+
+    private:
+        char const* _reason;
+    };
+
     template <typename value_t, typename node_t>
     class binary_search_tree {
-    public:
-        class null_pointer_access : public std::exception {
-        public:
-            explicit null_pointer_access(char const* reason) : _reason(reason) {}
-            virtual ~null_pointer_access() noexcept {}
-            virtual char const* what() const noexcept override {
-                return this->_reason;
-            }
-
-        private:
-            char const* _reason;
-        };
-
     public:
         enum class direction { none, left, right };
         enum class extrema { min, max };

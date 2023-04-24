@@ -31,8 +31,6 @@ namespace tk {
 
         linked_list_based_bst();
         linked_list_based_bst(std::initializer_list<t> list);
-        explicit linked_list_based_bst(size_t size, t const& value);
-        explicit linked_list_based_bst(size_t size);
         ~linked_list_based_bst();
 
         void search(t const& value, std::function<void(node*& parent, node*& current, direction direction)> const& completion) const override;
