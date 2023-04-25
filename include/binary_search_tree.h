@@ -20,6 +20,8 @@ namespace tk {
         char const* _reason;
     };
 
+
+
     template <typename value_t, typename node_t>
     class binary_search_tree {
     public:

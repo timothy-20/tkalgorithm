@@ -15,9 +15,6 @@ namespace tk {
     // 이후 중복 값이 발생한 경우 해당 값을 제외하고 계속해서 삽입을 수행
     template <typename t>
     linked_list_based_bst<t>::linked_list_based_bst(std::initializer_list<t> list) : linked_list_based_bst() {
-        // 삽입하는 값의 갯수가 홀수일 경우
-        // 삽입하는 값의 갯수가 짝수일 경우
-
         for (t value : list) {
 
         }
@@ -26,6 +23,10 @@ namespace tk {
     template <typename t>
     linked_list_based_bst<t>::~linked_list_based_bst() {
         // in-order 순회를 이용하여 할당한 노드 포인터들을 해제
+
+        if (this->_root) {
+//            this->traversal_inorder(this->_root, []())
+        }
     }
 
     template <typename t>

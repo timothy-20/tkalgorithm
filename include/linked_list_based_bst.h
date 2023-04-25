@@ -30,6 +30,8 @@ namespace tk {
         using extrema = typename binary_search_tree<t, node*>::extrema;
 
         linked_list_based_bst();
+        // 정렬 알고리즘 지원 함수 구현 후, 내부 기능 구현할 것
+        // 사용자의 편의를 위해 제공되는 생성자 기능
         linked_list_based_bst(std::initializer_list<t> list);
         ~linked_list_based_bst();
 

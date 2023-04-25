@@ -13,7 +13,11 @@ namespace tk {
         using direction = typename binary_search_tree<t, size_t>::direction;
         using extrema = typename binary_search_tree<t, size_t>::extrema;
 
-        explicit array_list_based_bst(size_t size = 14); // level 3 까지는 기본적으로 할당
+        // level 3 까지는 기본적으로 할당
+        explicit array_list_based_bst(size_t size = 14);
+        // 정렬 알고리즘 지원 함수 구현 후, 내부 기능 구현할 것
+        // 사용자의 편의를 위해 제공되는 생성자 기능
+        array_list_based_bst(std::initializer_list<t> list);
         ~array_list_based_bst();
 
         void search(t const& value, std::function<void(size_t& parent, size_t& current, direction direction)> const& completion) const override;

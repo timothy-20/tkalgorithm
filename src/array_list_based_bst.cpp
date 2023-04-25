@@ -14,6 +14,13 @@ namespace tk {
     }
 
     template <typename t>
+    array_list_based_bst<t>::array_list_based_bst(std::initializer_list<t> list) : array_list_based_bst(list.size()) {
+        for (t value : list) {
+
+        }
+    }
+
+    template <typename t>
     array_list_based_bst<t>::~array_list_based_bst() {
         delete[] this->_tree;
     }
