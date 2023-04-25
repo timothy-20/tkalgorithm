@@ -137,8 +137,34 @@ namespace tk {
             throw tk::null_pointer_access("Root node is nullptr in traversal post-order");
         }
 
-        std::stack<node*> node_stack;
+        std::stack<node*> node_stack_01, node_stack_02;
 
+        node_stack_01.push(root);
+
+        while (!node_stack_01.empty()) {
+            auto current(node_stack_01.top());
+
+            node_stack_01.pop();
+            // 부모에 해당하는 노드가 가장 마지막에 쌓일 수 있도록 두 번째 스택에 저장
+            node_stack_02.push(current);
+
+            // 두 번째 stack에서 왼쪽 노드들이 아래에 쌓일 수 있도록 오른쪽보다 먼저 스택에 저장
+            if (current->_left) {
+                node_stack_01.push(current->_left);
+            }
+
+            if (current->_right) {
+                node_stack_01.push(current->_right);
+            }
+        }
+
+        // 이후 '왼쪽 - 오른쪽 - 부모' 의 순서로 노드가 삽입된 두 번째 스택을 순차적으로 순회
+        while (!node_stack_02.empty()) {
+            auto current(node_stack_02.top());
+
+            node_stack_02.pop();
+            completion(current->_value);
+        }
     }
 
     template <typename t>
