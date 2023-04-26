@@ -7,12 +7,18 @@
 #include <algorithm>
 #include <functional>
 
+// 구현 시 참고할 만한 구현체들
+// c++의 std::set(https://en.cppreference.com/w/cpp/container/set)
+// objective c의 NSSet(https://developer.apple.com/documentation/foundation/nsset?language=objc)
+
 namespace tk {
-    class null_pointer_access : public std::exception {
+    template <typename t>
+    class binary_search_tree_exception : public std::exception {
     public:
-        explicit null_pointer_access(char const* reason) : _reason(reason) {}
-        ~null_pointer_access() noexcept override = default;
-        char const* what() const noexcept override {
+        explicit binary_search_tree_exception(char const* reason) : _reason(reason) {
+        }
+        ~binary_search_tree_exception() override = default;
+        const char * what() const noexcept override {
             return this->_reason;
         }
 
@@ -20,7 +26,11 @@ namespace tk {
         char const* _reason;
     };
 
-
+    // nullptr인 노드에 접근했을 경우 발생하는 예외
+    class null_pointer_access : public binary_search_tree_exception<null_pointer_access> {
+    public:
+        using binary_search_tree_exception::binary_search_tree_exception;
+    };
 
     template <typename value_t, typename node_t>
     class binary_search_tree {
