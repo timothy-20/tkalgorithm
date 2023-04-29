@@ -46,12 +46,16 @@ namespace tk {
 
             parent = current;
 
-            if (value < current->_value) { // 현재 노드의 값이 삽입하려는 값보다 작은 경우
-                current = current->_left; // 왼쪽 자식 노드로 이동
+            // 현재 노드의 값이 삽입하려는 값보다 작은 경우
+            if (value < current->_value) {
+                // 왼쪽 자식 노드로 이동
+                current = current->_left;
                 direction = direction::left;
 
-            } else { // 현재 노드의 값이 삽입하려는 값보다 큰 경우
-                current = current->_right; // 오른쪽 자식 노드로 이동
+                // 현재 노드의 값이 삽입하려는 값보다 큰 경우
+            } else {
+                // 오른쪽 자식 노드로 이동
+                current = current->_right;
                 direction = direction::right;
             }
         }
