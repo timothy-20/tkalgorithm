@@ -6,18 +6,8 @@
 #include <stack> // 구현을 위해 1차적으로 std 라이브러리 사용
 
 namespace tk {
-    // 연결 리스트 기반 이진 탐색 트리 구현
     template <typename t>
     linked_list_based_bst<t>::linked_list_based_bst() : _root(nullptr) {
-    }
-
-    // 값을 최대한 완전 이진 트리에 가깝께 구성하는 순서로 재조립하고 삽입을 수행하도록 구현
-    // 이후 중복 값이 발생한 경우 해당 값을 제외하고 계속해서 삽입을 수행
-    template <typename t>
-    linked_list_based_bst<t>::linked_list_based_bst(std::initializer_list<t> list) : linked_list_based_bst() {
-        for (t value : list) {
-
-        }
     }
 
     template <typename t>
@@ -32,7 +22,7 @@ namespace tk {
     template <typename t>
     void linked_list_based_bst<t>::search(t const& value, std::function<void(node*& parent, node*& current, direction direction)> const& completion) const {
         if (!this->_root) {
-            throw tk::null_pointer_access("Root node is nullptr in search.");
+            return;
         }
 
         node* parent(nullptr);
@@ -40,16 +30,16 @@ namespace tk {
         auto direction(direction::none);
 
         while (current) {
-            if (value == current->_value) { // 트리에서 동일한 값을 찾은 경우
+            if (value == current->value) { // 트리에서 동일한 값을 찾은 경우
                 break;
             }
 
             parent = current;
 
             // 현재 노드의 값이 삽입하려는 값보다 작은 경우
-            if (value < current->_value) {
+            if (value < current->value) {
                 // 왼쪽 자식 노드로 이동
-                current = current->_left;
+                current = current->left;
                 direction = direction::left;
 
                 // 현재 노드의 값이 삽입하려는 값보다 큰 경우
@@ -66,7 +56,7 @@ namespace tk {
     template <typename t>
     typename linked_list_based_bst<t>::node* linked_list_based_bst<t>::search_extrema(node* root, extrema extrema) const {
         if (!root) {
-            throw tk::null_pointer_access("Root node is nullptr in search extrema.");
+            return nullptr;
         }
 
         node* parent(nullptr);
@@ -86,7 +76,7 @@ namespace tk {
     template <typename t>
     void linked_list_based_bst<t>::traversal_preorder(node* root, std::function<void(t& value)> const& completion) const {
         if (!root) {
-            throw tk::null_pointer_access("Root node is nullptr in traversal pre-order");
+            return;
         }
 
         std::stack<node*> node_stack;
@@ -97,15 +87,15 @@ namespace tk {
             auto top_node(node_stack.top());
 
             node_stack.pop();
-            completion(top_node->_value);
+            completion(top_node->value);
 
             // 스택이 LIFO(last in first out)로 동작하기 때문에 right를 먼저 삽입
-            if (top_node->_right) {
-                node_stack.push(top_node->_right);
+            if (top_node->right) {
+                node_stack.push(top_node->right);
             }
 
-            if (top_node->_left) {
-                node_stack.push(top_node->_left);
+            if (top_node->left) {
+                node_stack.push(top_node->left);
             }
         }
     }
@@ -113,7 +103,7 @@ namespace tk {
     template <typename t>
     void linked_list_based_bst<t>::traversal_inorder(node* root, std::function<void(t& value)> const& completion) const {
         if (!root) {
-            throw tk::null_pointer_access("Root node is nullptr in traversal in-order");
+            return;
         }
 
         node* current(root);
@@ -123,15 +113,15 @@ namespace tk {
             if (current) {
                 node_stack.push(current);
 
-                current = current->_left;
+                current = current->left;
 
             } else {
                 current = node_stack.top();
 
                 node_stack.pop();
-                completion(current->_value);
+                completion(current->value);
 
-                current = current->_right;
+                current = current->right;
             }
         }
     }
@@ -139,7 +129,7 @@ namespace tk {
     template <typename t>
     void linked_list_based_bst<t>::traversal_postorder(node* root, std::function<void(t& value)> const& completion) const {
         if (!root) {
-            throw tk::null_pointer_access("Root node is nullptr in traversal post-order");
+            return;
         }
 
         std::stack<node*> node_stack_01, node_stack_02;
@@ -154,12 +144,12 @@ namespace tk {
             node_stack_02.push(current);
 
             // 두 번째 stack에서 왼쪽 노드들이 아래에 쌓일 수 있도록 오른쪽보다 먼저 스택에 저장
-            if (current->_left) {
-                node_stack_01.push(current->_left);
+            if (current->left) {
+                node_stack_01.push(current->left);
             }
 
-            if (current->_right) {
-                node_stack_01.push(current->_right);
+            if (current->right) {
+                node_stack_01.push(current->right);
             }
         }
 
@@ -168,7 +158,7 @@ namespace tk {
             auto current(node_stack_02.top());
 
             node_stack_02.pop();
-            completion(current->_value);
+            completion(current->value);
         }
     }
 
@@ -180,71 +170,59 @@ namespace tk {
             return;
         }
 
-        try {
-            this->search(value, [value](node*& parent, node*& current, direction direction) {
-                // 값이 트리에 포함되어 있지 않은 경우
-                if (!current) {
-                    auto new_node(new node(value));
+        this->search(value, [value](node*& parent, node*& current, direction direction) {
+            // 값이 트리에 포함되어 있지 않은 경우
+            if (!current) {
+                auto new_node(new node(value));
 
-                    switch (direction) {
-                        case direction::left: parent->_left = new_node; break;
-                        case direction::right: parent->_right = new_node; break;
-                        case direction::none: return; // 루트 노드가 nullptr인 경우
-                    }
-
-                    // 부모 노드 설정
-                    new_node->_parent = parent;
+                switch (direction) {
+                    case direction::left: parent->_left = new_node; break;
+                    case direction::right: parent->_right = new_node; break;
+                    case direction::none: return; // 루트 노드가 nullptr인 경우
                 }
-            });
 
-        } catch (std::exception const& e) {
-            std::cerr << e.what() << '\n';
-            throw tk::null_pointer_access("Occurred exception with insert.");
-        }
+                // 부모 노드 설정
+                new_node->_parent = parent;
+            }
+        });
     }
 
     template <typename t>
     void linked_list_based_bst<t>::remove(t const& value) {
-        try {
-            this->search(value, [this](node*& parent, node*& current, direction direction) {
-                // 값이 트리에 포함되어 있는 경우
-                if (current) {
-                    if (current->_left && current->_right) { // 대상 노드의 자식이 2개 다 있는 경우
-                        auto successor(this->search_extrema(current->_right, extrema::min)); // 대상 노드의 오른쪽 자식의 최소 값 노드를 가져옴
-                        auto successor_right_child(successor->_right);
-                        current->_value = successor->_value; // 계승 노드의 값을 삭제 대상 노드로 복사(변경)
+        this->search(value, [this](node*& parent, node*& current, direction direction) {
+            // 값이 트리에 포함되어 있는 경우
+            if (current) {
+                if (current->_left && current->_right) { // 대상 노드의 자식이 2개 다 있는 경우
+                    auto successor(this->search_extrema(current->_right, extrema::min)); // 대상 노드의 오른쪽 자식의 최소 값 노드를 가져옴
+                    auto successor_right_child(successor->_right);
+                    current->_value = successor->_value; // 계승 노드의 값을 삭제 대상 노드로 복사(변경)
 
-                        if (successor_right_child) { // 계승 노드에 오른쪽 자식이 있는 경우
-                            successor->_parent->_left = successor_right_child;
-                            successor_right_child->_parent = successor->_parent;
-                        }
-
-                        delete successor;
-                        successor = nullptr;
-
-                    } else {
-                        if (!current->_left ^ !current->_right) { // 대상 노드의 자식이 1개만 있는 경우
-                            node* child_node(current->_left ? : current->_right);
-
-                            switch (direction) {
-                                case direction::left: parent->_left = child_node; break;
-                                case direction::right: parent->_right = child_node; break;
-                                default: break;
-                            }
-
-                            child_node->_parent = parent;
-                        }
-
-                        delete current;
-                        current = nullptr;
+                    if (successor_right_child) { // 계승 노드에 오른쪽 자식이 있는 경우
+                        successor->_parent->_left = successor_right_child;
+                        successor_right_child->_parent = successor->_parent;
                     }
-                }
-            });
 
-        } catch (std::exception const& e) {
-            std::cerr << e.what() << '\n';
-            throw tk::null_pointer_access("Occurred exception with remove.");
-        }
+                    delete successor;
+                    successor = nullptr;
+
+                } else {
+                    if (!current->_left ^ !current->_right) { // 대상 노드의 자식이 1개만 있는 경우
+                        node* child_node(current->_left ? : current->_right);
+
+                        switch (direction) {
+                            case direction::left: parent->_left = child_node; break;
+                            case direction::right: parent->_right = child_node; break;
+                            default: break;
+                        }
+
+                        child_node->_parent = parent;
+                    }
+
+                    delete current;
+                    current = nullptr;
+                }
+            }
+        });
     }
 
     template <typename t>
@@ -252,6 +230,5 @@ namespace tk {
         return this->_root;
     }
 
-    template class binary_search_tree<int, node<int>*>;
-    template class linked_list_based_bst<int>;
+    template class binary_search_tree<int, node<int>>;
 }

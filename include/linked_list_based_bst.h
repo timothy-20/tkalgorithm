@@ -3,22 +3,21 @@
 //
 
 #pragma once
-
 #include <binary_search_tree.h>
 
 namespace tk {
     template <typename nt>
     struct node {
-        nt _value;
-        node* _left;
-        node* _right;
-        node* _parent;
+        nt value;
+        node* left;
+        node* right;
+        node* parent;
 
         explicit node(nt const& value) :
-        _value(value),
-        _left(nullptr),
-        _right(nullptr),
-        _parent(nullptr) {}
+        value(value),
+        left(nullptr),
+        right(nullptr),
+        parent(nullptr) {}
         node() : node(nt()) {}
     };
 

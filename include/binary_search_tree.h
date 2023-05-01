@@ -27,14 +27,20 @@ namespace tk {
             > : public std::true_type {};
 
     // 가능한 사용자 정의 노드 타입에 대한 타입 트레잇
-//    template <typename T, typename = void>
-//    struct is_node_type : public std::false_type {};
+    template <typename T, typename = void>
+    struct is_available_node_type : public std::false_type {};
+
+    template <typename T>
+    struct is_available_node_type<T, std::void_t<
+            decltype(std::declval<T>().left),
+            decltype(std::declval<T>().right),
+            decltype(std::declval<T>().value)>> : std::true_type {};
 
     // 이진 탐색 트리 인터페이스
     template <typename value_t,
             typename node_t,
-            typename std::enable_if_t<is_comparable<value_t>::value, int> = 0
-            >
+            typename std::enable_if_t<is_comparable<value_t>::value, int> = 0,
+            typename std::enable_if_t<is_available_node_type<node_t>::value, int> = 0>
     class binary_search_tree {
     public:
         enum class direction { none, left, right };
