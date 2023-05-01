@@ -26,21 +26,10 @@ namespace tk {
             && std::is_same_v<decltype(std::declval<T>() == std::declval<T>()), bool>>
             > : public std::true_type {};
 
-    // 가능한 사용자 정의 노드 타입에 대한 타입 트레잇
-    template <typename T, typename = void>
-    struct is_available_node_type : public std::false_type {};
-
-    template <typename T>
-    struct is_available_node_type<T, std::void_t<
-            decltype(std::declval<T>().left),
-            decltype(std::declval<T>().right),
-            decltype(std::declval<T>().value)>> : std::true_type {};
-
     // 이진 탐색 트리 인터페이스
-    template <typename value_t,
-            typename node_t,
-            typename std::enable_if_t<is_comparable<value_t>::value, int> = 0,
-            typename std::enable_if_t<is_available_node_type<node_t>::value, int> = 0>
+    template <typename Value_t,
+            typename Node_t,
+            typename std::enable_if_t<is_comparable<Value_t>::value, int> = 0>
     class binary_search_tree {
     public:
         enum class direction { none, left, right };
@@ -48,17 +37,16 @@ namespace tk {
 
     public:
         virtual ~binary_search_tree() = default;
-        // 요소 색인
-        virtual void search(value_t const& value, std::function<void(node_t& parent, node_t& current, direction direction)> const& completion) const = 0;
-        virtual node_t search_extrema(node_t root, extrema extrema) const = 0;
-        // 요소 순회
-        virtual void traversal_preorder(node_t root, std::function<void(value_t& value)> const& completion) const = 0;
-        virtual void traversal_inorder(node_t root, std::function<void(value_t& value)> const& completion) const = 0;
-        virtual void traversal_postorder(node_t root, std::function<void(value_t& value)> const& completion) const = 0;
-        // 요소 수정
-        virtual void insert(value_t const& value) = 0;
-        virtual void remove(value_t const& value) = 0;
-        // 요소 접근
-        virtual node_t root() const = 0;
+        virtual void insert(Value_t const& value) = 0;
+        virtual void remove(Value_t const& value) = 0;
+        // 유틸리티 용도의 탐색 함수.
+
+    protected:
+        virtual void search(Value_t const& value, std::function<void(Node_t& parent, Node_t& current, direction direction)> const& completion) const = 0;
+        virtual Node_t search_extrema(Node_t root, extrema extrema) const = 0;
+        virtual void traversal_preorder(Node_t root, std::function<void(Node_t& current)> const& completion) const = 0;
+        virtual void traversal_inorder(Node_t root, std::function<void(Node_t& current)> const& completion) const = 0;
+        virtual void traversal_postorder(Node_t root, std::function<void(Node_t& current)> const& completion) const = 0;
+        virtual Node_t root() const = 0;
     };
 }
